@@ -2,7 +2,18 @@
 receptor_user: receptor
 receptor_group: receptor
 
+receptor_config_path: '/etc/receptor'
 receptor_socket_dir: '/var/run/receptor'
+receptor_control_service: 'control'
+receptor_control_filename: 'receptor.sock'
 
 receptor_fd_limit_soft: 4096
 receptor_fd_limit_hard: 8192
+
+receptor_listener: true
+receptor_local_only: false
+
+receptor_protocol: 'tcp'
+receptor_port: 27199
+
+receptor_log_level: 'info'

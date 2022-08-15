@@ -1,0 +1,17 @@
+---
+- node:
+    id: {{ (receptor_host_identifier == 'localhost') | ternary('localhost.localdomain', receptor_host_identifier) }}
+
+- log-level: {{ receptor_log_level }}
+
+- control-service:
+    service: {{ receptor_control_service }}
+    filename: {{ receptor_socket_dir }}/{{ receptor_control_filename }}
+    permissions: 0660
+
+{% if receptor_local_only %}
+- local-only
+{% elif receptor_listener %}
+- {{ receptor_protocol }}-listener:
+    port: {{ receptor_port }}
+{% endif %}

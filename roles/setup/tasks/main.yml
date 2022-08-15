@@ -8,6 +8,16 @@
 
 - include_tasks: configure.yml
 
+- name: Deploy receptor config
+  template:
+    src: templates/receptor.conf.j2
+    dest: "{{ receptor_config_path }}/receptor.conf"
+    mode: '0644'
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+  # notify:
+  #   - "Receptor Reload"
+
 - name: Start Receptor service
   systemd:
     name: receptor
