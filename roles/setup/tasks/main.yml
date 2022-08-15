@@ -5,3 +5,12 @@
 # Setup/install tasks.
 - include_tasks: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
+
+- include_tasks: configure.yml
+
+- name: Start Receptor service
+  systemd:
+    name: receptor
+    state: started
+    daemon_reload: yes
+    enabled: yes

@@ -1,0 +1,8 @@
+---
+receptor_user: receptor
+receptor_group: receptor
+
+receptor_socket_dir: '/var/run/receptor'
+
+receptor_fd_limit_soft: 4096
+receptor_fd_limit_hard: 8192
