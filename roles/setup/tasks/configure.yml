@@ -1,0 +1,41 @@
+---
+- name: Ensure soft/hard file descriptors limits
+  template:
+    src: templates/pam_limits.conf.j2
+    dest: /etc/security/limits.d/receptor.conf
+    mode: '0600'
+    owner: root
+    group: root
+
+- name: Ensure systemd override directory exists
+  file:
+    dest: /etc/systemd/system/receptor.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Override receptor's systemd service runuser
+  template:
+    src: templates/systemd_receptor_override.conf.j2
+    dest: /etc/systemd/system/receptor.service.d/override.conf
+    mode: '0644'
+    owner: root
+    group: root
+#  notify: Restart Receptor
+
+- name: Configure the receptor socket directory
+  file:
+    path: "{{ receptor_socket_dir }}"
+    state: directory
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0750'
+
+- name: Create tmpfiles.d entry for receptor socket directory
+  template:
+    src: templates/receptor_tmpd.conf.j2
+    dest: /etc/tmpfiles.d/receptor.conf
+    mode: '0640'
+    owner: root
+    group: root

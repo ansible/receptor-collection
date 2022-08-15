@@ -1,0 +1,7 @@
+[Service]
+User={{ receptor_user }}
+Group={{ receptor_group }}
+{% if receptor_app_service is defined %}
+[Unit]
+PartOf={{ receptor_app_service }}
+{% endif %}
