@@ -105,6 +105,27 @@ port number it will listen for those connections on.
 
 ---
 
+    receptor_work_commands: # defaults to not set
+
+The definition of the Receptor work commands.  This variable is
+expected to be a dictionary, with keys the unique worktype name, and
+values a dict of the rest of the key-value pairs of the work
+definition.  See
+<https://receptor.readthedocs.io/en/latest/workceptor.html> for more
+information.
+
+---
+
+    receptor_kubernetes_commands: # defaults to not set
+
+The definition of the Receptor work-kubernetes commands.  This
+variable is expected to be a dictionary, with keys the unique worktype
+name, and values a dict of the rest of the key-value pairs of the work
+definition.  See <https://receptor.readthedocs.io/en/latest/k8s.html>
+for more information.
+
+---
+
 ## License
 
 Apache 2

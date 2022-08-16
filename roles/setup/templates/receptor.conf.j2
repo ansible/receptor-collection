@@ -15,3 +15,23 @@
 - {{ receptor_protocol }}-listener:
     port: {{ receptor_port }}
 {% endif %}
+
+{% if receptor_work_commands is defined -%}
+{% for command, config in receptor_work_commands.items() %}
+- work-command:
+    worktype: {{ command }}
+{% for key, value in config.items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endfor %}
+{%- endif %}
+
+{%- if receptor_kubernetes_commands is defined %}
+{% for command, config in receptor_kubernetes_commands.items() %}
+- work-kubernetes:
+    worktype: {{ command }}
+{% for key, value in config.items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endfor %}
+{% endif -%}
