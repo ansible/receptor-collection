@@ -1,0 +1,39 @@
+---
+- name: Check if TLS CA files exist
+  stat:
+    path: "{{ item }}"
+  register: _ca_files
+  failed_when: not _ca_files.stat.exists
+  ignore_errors: yes
+  with_items:
+    - "{{ receptor_ca_certfile }}"
+    - "{{ receptor_ca_keyfile }}"
+
+- name: Generate Receptor CA
+  become: yes
+  become_user: "{{ receptor_user }}"
+  run_once: true
+  shell: >
+    receptor --cert-init commonname="{{ receptor_ca_common_name }}"
+    bits="{{ receptor_tls_bits }}" outcert="{{ receptor_ca_certfile }}"
+    outkey="{{ receptor_ca_keyfile }}"
+  when: _ca_files is failed
+
+- name: Set permissions for the Receptor CA files
+  file:
+    dest: "{{ item }}"
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0640'
+  with_items:
+    - "{{ receptor_ca_certfile }}"
+    - "{{ receptor_ca_keyfile }}"
+
+- name: Slurp Receptor CA files
+  slurp:
+    src: "{{ item }}"
+  register: _ca_data
+  no_log: true
+  with_items:
+    - "{{ receptor_ca_certfile }}"
+    - "{{ receptor_ca_keyfile }}"

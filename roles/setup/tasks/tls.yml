@@ -1,0 +1,68 @@
+---
+- name: Create Receptor cert directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+    mode: '0750'
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    recurse: yes
+  with_items:
+    - "{{ receptor_tls_dir }}"
+    - "{{ receptor_tls_ca_dir }}"
+
+- name: Process provided TLS files
+  include_tasks: tls_local.yml
+  when: custom_tls_certfile is defined or custom_tls_keyfile is defined
+
+- block:
+    - name: Clear out Receptor certs for regeneration
+      file:
+        dest: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ receptor_tls_ca_dir }}"
+        - "{{ receptor_tls_dir }}"
+      when: receptor_tls_regenerate
+
+    - name: Recreate Receptor cert directories
+      file:
+        dest: "{{ item }}"
+        state: directory
+        mode: '0750'
+        owner: "{{ receptor_user }}"
+        group: "{{ receptor_group }}"
+        recurse: yes
+      with_items:
+        - "{{ receptor_tls_dir }}"
+        - "{{ receptor_tls_ca_dir }}"
+
+    - name: Check if TLS certificates exist
+      stat:
+        path: "{{ item }}"
+      register: _tls_files
+      failed_when: not _tls_files.stat.exists
+      ignore_errors: yes
+      with_items:
+        - "{{ receptor_tls_certfile }}"
+        - "{{ receptor_tls_keyfile }}"
+
+    - name: Generate new TLS certificates
+      include_tasks: tls_generate.yml
+      when: _tls_files is failed
+      # notify:
+      #   - "Restart Receptor"
+  when:
+    - custom_tls_certfile is not defined
+    - custom_tls_keyfile is not defined
+
+- name: Set TLS file permissions
+  file:
+    dest: "{{ item }}"
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0640'
+  with_items:
+    - "{{ receptor_tls_certfile }}"
+    - "{{ receptor_tls_keyfile }}"
+    - "{{ receptor_ca_certfile }}"
