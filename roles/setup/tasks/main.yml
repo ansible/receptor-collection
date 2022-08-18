@@ -8,6 +8,9 @@
 
 - include_tasks: configure.yml
 
+- include_tasks: tls.yml
+  when: receptor_tls
+
 - name: Deploy receptor config
   template:
     src: templates/receptor.conf.j2

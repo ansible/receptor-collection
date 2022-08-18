@@ -24,8 +24,8 @@ groupvars or hostvars.
 
 ---
 
-    receptor_user: receptor
-    receptor_group: receptor
+    receptor_user: 'receptor'
+    receptor_group: 'receptor'
 
 The user and group under which Receptor will run.
 
@@ -46,6 +46,61 @@ The name of the control socket file.
     receptor_config_path: '/etc/receptor'
 
 Path to the Receptor config file.
+
+---
+
+    receptor_tls: false
+
+Enables the TLS protocol to be used for communication between nodes.
+If enabled, appropriate certificates will have to be provided or
+generated.
+
+---
+
+    receptor_mintls13: false
+
+If set to true, this forces the minimum TLS version used to be 1.3.
+Otherwise, the minimum version will be 1.2.  This variable has no
+effect unless `receptor_tls` is enabled.
+
+---
+
+    receptor_tls_dir: '/etc/receptor/tls'
+    receptor_tls_ca_dir: '{{ receptor_tls_dir }}/ca'
+
+Directories on the server where the TLS keys and CA keys would be located.
+
+---
+
+    receptor_tls_certfile: "{{ receptor_tls_dir }}/{{ receptor_host_identifier }}.crt"
+    receptor_tls_keyfile: "{{ receptor_tls_dir }}/{{ receptor_host_identifier }}.key"
+
+Path on the server to the public and private TLS key files.
+
+---
+
+    receptor_ca_certfile: "{{ receptor_tls_ca_dir }}/mesh-CA.crt"
+    receptor_ca_keyfile: "{{ receptor_tls_ca_dir }}/mesh-CA.key"
+
+Path on the server where the public and private Certificate Authority
+key files would be located.
+
+---
+
+    custom_ca_certfile: # defaults to not set
+    custom_ca_keyfile: # defaults to not set
+
+Path on the local filesystem to user-provided Certificate Authority
+files.
+
+---
+
+    custom_tls_certfile: # defaults to not set
+    custom_tls_keyfile: # defaults to not set
+
+Hostvar that is the path on the local filesystem to user-provided
+per-node certificate files.  If used, both must be provided in
+combination with a `custom_ca_certfile` that was used to sign them.
 
 ---
 

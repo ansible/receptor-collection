@@ -8,12 +8,36 @@
     service: control
     filename: {{ receptor_socket_dir }}/{{ receptor_control_filename }}
     permissions: 0660
+    {% if receptor_tls -%}
+    tls: tls_server
+    {%- endif %}
+
+{% if receptor_tls -%}
+- tls-server:
+    name: tls_server
+    cert: {{ receptor_tls_certfile }}
+    key: {{ receptor_tls_keyfile }}
+    clientcas: {{ receptor_ca_certfile }}
+    requireclientcert: true
+    mintls13: {{ receptor_mintls13 | bool }}
+
+- tls-client:
+    name: tls_client
+    cert: {{ receptor_tls_certfile }}
+    key: {{ receptor_tls_keyfile }}
+    rootcas: {{ receptor_ca_certfile }}
+    insecureskipverify: false
+    mintls13: {{ receptor_mintls13 | bool }}
+{%- endif %}
 
 {% if receptor_local_only %}
 - local-only
 {% elif receptor_listener %}
 - {{ receptor_protocol }}-listener:
     port: {{ receptor_port }}
+    {% if receptor_tls -%}
+    tls: tls_server
+    {%- endif %}
 {% endif %}
 
 {% if receptor_work_commands is defined -%}

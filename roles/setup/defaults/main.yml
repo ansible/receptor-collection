@@ -6,6 +6,16 @@ receptor_config_path: '/etc/receptor'
 receptor_socket_dir: '/var/run/receptor'
 receptor_control_filename: 'receptor.sock'
 
+receptor_tls: false
+receptor_mintls13: false
+
+receptor_tls_dir: '/etc/receptor/tls'
+receptor_tls_ca_dir: '{{ receptor_tls_dir }}/ca'
+receptor_tls_certfile: "{{ receptor_tls_dir }}/{{ receptor_host_identifier }}.crt"
+receptor_tls_keyfile: "{{ receptor_tls_dir }}/{{ receptor_host_identifier }}.key"
+receptor_ca_certfile: "{{ receptor_tls_ca_dir }}/mesh-CA.crt"
+receptor_ca_keyfile: "{{ receptor_tls_ca_dir }}/mesh-CA.key"
+
 receptor_fd_limit_soft: 4096
 receptor_fd_limit_hard: 8192
 
