@@ -16,6 +16,10 @@ receptor_tls_keyfile: "{{ receptor_tls_dir }}/{{ receptor_host_identifier }}.key
 receptor_ca_certfile: "{{ receptor_tls_ca_dir }}/mesh-CA.crt"
 receptor_ca_keyfile: "{{ receptor_tls_ca_dir }}/mesh-CA.key"
 
+receptor_worksign_key_dir: "/etc/receptor"
+receptor_worksign_private_keyfile: "{{ receptor_worksign_key_dir }}/work_private_key.pem"
+receptor_worksign_public_keyfile: "{{ receptor_worksign_key_dir }}/work_public_key.pem"
+
 receptor_fd_limit_soft: 4096
 receptor_fd_limit_hard: 8192
 
@@ -24,5 +28,7 @@ receptor_local_only: false
 
 receptor_protocol: 'tcp'
 receptor_port: 27199
+receptor_sign: false
+receptor_verify: false
 
 receptor_log_level: 'info'

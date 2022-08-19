@@ -104,6 +104,36 @@ combination with a `custom_ca_certfile` that was used to sign them.
 
 ---
 
+    receptor_sign: false
+
+Hostvar designating that this host will sign any work that it sends
+over the Receptor mesh.
+
+---
+
+    receptor_verify: false
+
+Hostvar designating that this host will verify any work that it
+receives using a public key.
+
+---
+
+    receptor_worksign_key_dir: "/etc/receptor"
+    receptor_worksign_private_keyfile: "{{ receptor_worksign_key_dir }}/work_private_key.pem"
+    receptor_worksign_public_keyfile: "{{ receptor_worksign_key_dir }}/work_public_key.pem"
+
+Path on the server to the public and private OpenSSL work signing key files.
+
+---
+
+    custom_worksign_private_keyfile: # defaults to not set
+    custom_worksign_public_keyfile: # defaults to not set
+
+Path on the local filesystem to user-provided OpenSSL work signing key
+files.
+
+---
+
     receptor_fd_limit_soft: 4096
     receptor_fd_limit_hard: 8192
 

@@ -1,0 +1,18 @@
+---
+- name: Distribute private work signing key
+  copy:
+    src: "{{ custom_worksign_private_keyfile }}"
+    dest: "{{ receptor_worksign_private_keyfile }}"
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0640'
+  when: receptor_sign
+
+- name: Distribute public work signing key
+  copy:
+    src: "{{ custom_worksign_public_keyfile }}"
+    dest: "{{ receptor_worksign_public_keyfile }}"
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0640'
+  when: receptor_verify
