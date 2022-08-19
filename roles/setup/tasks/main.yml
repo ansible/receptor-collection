@@ -11,6 +11,9 @@
 - include_tasks: tls.yml
   when: receptor_tls
 
+- include_tasks: worksign.yml
+  when: (receptor_sign | default(false)) or (receptor_verify | default(false))
+
 - name: Deploy receptor config
   template:
     src: templates/receptor.conf.j2

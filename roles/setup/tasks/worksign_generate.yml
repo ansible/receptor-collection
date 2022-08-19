@@ -1,0 +1,57 @@
+---
+- name: Create work signing keys
+  delegate_to: "{{ receptor_primary_node }}"
+  run_once: true
+  block:
+    - name: Generate Private RSA key for signing work
+      community.crypto.openssl_privatekey:
+        path: "{{ receptor_worksign_private_keyfile }}"
+        type: RSA
+        format: pkcs1
+        force: "{{ receptor_worksign_regenerate }}"
+        size: "{{ receptor_tls_bits }}"
+        owner: "{{ receptor_user }}"
+        group: "{{ receptor_group }}"
+        mode: '0640'
+
+    - name: Generate public RSA key for signing work
+      community.crypto.openssl_publickey:
+        path: "{{ receptor_worksign_public_keyfile }}"
+        privatekey_path: "{{ receptor_worksign_private_keyfile }}"
+        format: PEM
+        force: "{{ receptor_worksign_regenerate }}"
+        owner: "{{ receptor_user }}"
+        group: "{{ receptor_group }}"
+        mode: '0640'
+
+    - name: Slurp private work signing key
+      slurp:
+        src: "{{ receptor_worksign_private_keyfile }}"
+      register: _private_signing_key
+      no_log: true
+
+    - name: Slurp public work signing key
+      slurp:
+        src: "{{ receptor_worksign_public_keyfile }}"
+      register: _public_signing_key
+      no_log: true
+
+- name: Distribute private work signing key
+  no_log: true
+  copy:
+    content: "{{ hostvars[receptor_primary_node]['_private_signing_key']['content'] | b64decode }}"
+    dest: "{{ _private_signing_key['source'] }}"
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0640'
+  when: receptor_sign
+
+- name: Distribute public work signing key
+  no_log: true
+  copy:
+    content: "{{ hostvars[receptor_primary_node]['_public_signing_key']['content'] | b64decode }}"
+    dest: "{{ _public_signing_key['source'] }}"
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0640'
+  when: receptor_verify

@@ -1,0 +1,8 @@
+---
+- include_tasks: worksign_local.yml
+  when: custom_worksign_private_keyfile is defined or custom_worksign_public_keyfile is defined
+
+- include_tasks: worksign_generate.yml
+  when:
+    - custom_worksign_private_keyfile is not defined
+    - custom_worksign_public_keyfile is not defined

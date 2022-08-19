@@ -2,6 +2,17 @@
 - node:
     id: {{ (receptor_host_identifier == 'localhost') | ternary('localhost.localdomain', receptor_host_identifier) }}
 
+{% if receptor_sign %}
+- work-signing:
+    privatekey: {{ receptor_worksign_private_keyfile }}
+    tokenexpiration: 1m
+{% endif %}
+
+{% if receptor_verify %}
+- work-verification:
+    publickey: {{ receptor_worksign_public_keyfile }}
+{% endif %}
+
 - log-level: {{ receptor_log_level }}
 
 - control-service:

@@ -132,10 +132,46 @@ combination with a `custom_ca_certfile` that was used to sign them.
 
     receptor_primary_node: # defaults to not set
 
-Under circumstances where new TLS certificates need to be generated
-and `custom_ca_certfile` and `custom_ca_keyfile` were not set, this
-variable must be set to the host that either has the CA private
-keyfile or will be trusted to generate it.
+Under circumstances where new TLS certificates or work signing key
+files need to be generated and the variables pointing to local files
+are not set, this variable must be set to the host that either has the
+files or will be trusted to generate them.
+
+---
+
+    receptor_sign: false
+
+Hostvar designating that this host will sign any work that it sends
+over the Receptor mesh.
+
+---
+
+    receptor_verify: false
+
+Hostvar designating that this host will verify any work that it
+receives using a public key.
+
+---
+
+    receptor_worksign_regenerate: false
+
+Forces new OpenSSL keys to be generated for work signing.
+
+---
+
+    receptor_worksign_key_dir: "/etc/receptor"
+    receptor_worksign_private_keyfile: "{{ receptor_worksign_key_dir }}/work_private_key.pem"
+    receptor_worksign_public_keyfile: "{{ receptor_worksign_key_dir }}/work_public_key.pem"
+
+Path on the server to the public and private OpenSSL work signing key files.
+
+---
+
+    custom_worksign_private_keyfile: # defaults to not set
+    custom_worksign_public_keyfile: # defaults to not set
+
+Path on the local filesystem to user-provided OpenSSL work signing key
+files.
 
 ---
 
