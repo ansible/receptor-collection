@@ -49,6 +49,13 @@ Path to the Receptor config file.
 
 ---
 
+    routable_hostname: # defaults to not set
+
+Hostvar for the routable address to this node.  If this is unset
+`ansible_host` will be used instead.  Must be unique.
+
+---
+
     receptor_tls: false
 
 Enables the TLS protocol to be used for communication between nodes.
@@ -150,13 +157,6 @@ Optional variable to tie Receptor together with some other service in systemd.
     receptor_log_level: 'info'
 
 The level at which Receptor should write logs.  Allowable options are 'error', 'warning', 'info', and 'debug'.
-
----
-
-    receptor_host_identifier: # defaults to not set
-
-Hostvar for the routable address to this node.  If this is unset
-`ansible_host` will be used instead.  Must be unique.
 
 ---
 
