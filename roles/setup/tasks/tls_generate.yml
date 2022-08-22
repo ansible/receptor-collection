@@ -76,7 +76,6 @@
       set_fact:
         receptor_ipaddress_cmd: "ipaddress={{ hostvars[inventory_hostname]['ansible_all_ipv4_addresses'] | join(' ipaddress=') }}"
 
-    # FIXME: we haven't defined `receptor_host_identifier` yet
     - name: Validate if receptor_host_identifier is an IP address
       set_fact:
         _dnsname_valid_ipadddr: "{{ receptor_host_identifier | regex_search(regexp) }}"
@@ -96,7 +95,6 @@
         x509_dnsname_cmd: "dnsname={{ receptor_host_identifier }}"
       when: _dnsname_valid_ipadddr == '' or _dnsname_valid_ipadddr == None
 
-    # FIXME: this does logic with receptor_host_identifier which ought to be done once, upstream
     - name: Create node certificates
       become: yes
       become_user: "{{ receptor_user }}"
@@ -104,7 +102,7 @@
       shell: >
         receptor --cert-makereq commonname="{{ receptor_host_identifier }}"
         bits="{{ receptor_tls_bits }}"
-        nodeid="{{ (receptor_host_identifier == 'localhost') | ternary('localhost.localdomain', receptor_host_identifier) }}"
+        nodeid="{{ receptor_host_identifier }}"
         outreq="{{ receptor_tls_certfile }}"
         outkey="{{ receptor_tls_keyfile }}"
         {{ receptor_ipaddress_cmd | default(None) }}

@@ -1,6 +1,6 @@
 ---
 - node:
-    id: {{ (receptor_host_identifier == 'localhost') | ternary('localhost.localdomain', receptor_host_identifier) }}
+    id: {{ receptor_host_identifier }}
 
 {% if receptor_sign %}
 - work-signing:
