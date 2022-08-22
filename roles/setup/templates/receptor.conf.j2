@@ -51,6 +51,17 @@
     {%- endif %}
 {% endif %}
 
+{% if receptor_peers | default([]) %}
+{% for peer in receptor_peers %}
+- {{ peer['protocol'] }}-peer:
+    address: {{ peer['address'] | default(peer['host']) }}:{{ peer['port'] }}
+    redial: true
+{% if receptor_tls -%}
+    tls: tls_client
+{%- endif %}
+{% endfor %}
+{% endif %}
+
 {% if receptor_work_commands is defined -%}
 {% for command, config in receptor_work_commands.items() %}
 - work-command:

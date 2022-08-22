@@ -56,6 +56,17 @@ Hostvar for the routable address to this node.  If this is unset
 
 ---
 
+    receptor_peers: # defaults to not set
+
+Hostvar for the Ansible hosts that this node is peering outwards to.
+This is expected to be a list of dicts.
+
+In the dicts, the `'host'` key is required, `'port'` and `'protocol'`
+are optional and will default to the overall defaults for
+`receptor_port` and `receptor_protocol`.
+
+---
+
     receptor_tls: false
 
 Enables the TLS protocol to be used for communication between nodes.
@@ -177,9 +188,9 @@ of `receptor_listener`.
     receptor_protocol: 'tcp'
     receptor_port: 27199
 
-Hostvars for the protocol this instance of Receptor will use
-(allowable options are 'tcp', 'udp', and 'ws' for websockets), and the
-port number it will listen for those connections on.
+Override with hostvars for the protocol this instance of Receptor will
+use (allowable options are 'tcp', 'udp', and 'ws' for websockets), and
+the port number it will listen for those connections on.
 
 ---
 
