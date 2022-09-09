@@ -1,0 +1,32 @@
+---
+# Variable configuration.
+- include_tasks: variables.yml
+
+# Setup/install tasks.
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: configure.yml
+
+- include_tasks: tls.yml
+  when: receptor_tls
+
+- include_tasks: worksign.yml
+  when: receptor_sign or receptor_verify
+
+- name: Deploy receptor config
+  template:
+    src: templates/receptor.conf.j2
+    dest: "{{ receptor_config_path }}/receptor.conf"
+    mode: '0644'
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+  # notify:
+  #   - "Receptor Reload"
+
+- name: Start Receptor service
+  systemd:
+    name: receptor
+    state: started
+    daemon_reload: yes
+    enabled: yes

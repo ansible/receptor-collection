@@ -1,0 +1,83 @@
+---
+- node:
+    id: {{ receptor_host_identifier }}
+
+{% if receptor_sign %}
+- work-signing:
+    privatekey: {{ receptor_worksign_private_keyfile }}
+    tokenexpiration: 1m
+{% endif %}
+
+{% if receptor_verify %}
+- work-verification:
+    publickey: {{ receptor_worksign_public_keyfile }}
+{% endif %}
+
+- log-level: {{ receptor_log_level }}
+
+- control-service:
+    service: control
+    filename: {{ receptor_socket_dir }}/{{ receptor_control_filename }}
+    permissions: 0660
+    {% if receptor_tls -%}
+    tls: tls_server
+    {%- endif %}
+
+{% if receptor_tls -%}
+- tls-server:
+    name: tls_server
+    cert: {{ receptor_tls_certfile }}
+    key: {{ receptor_tls_keyfile }}
+    clientcas: {{ receptor_ca_certfile }}
+    requireclientcert: true
+    mintls13: {{ receptor_mintls13 | bool }}
+
+- tls-client:
+    name: tls_client
+    cert: {{ receptor_tls_certfile }}
+    key: {{ receptor_tls_keyfile }}
+    rootcas: {{ receptor_ca_certfile }}
+    insecureskipverify: false
+    mintls13: {{ receptor_mintls13 | bool }}
+{%- endif %}
+
+{% if receptor_local_only %}
+- local-only
+{% elif receptor_listener %}
+- {{ receptor_protocol }}-listener:
+    port: {{ receptor_port }}
+    {% if receptor_tls -%}
+    tls: tls_server
+    {%- endif %}
+{% endif %}
+
+{% if receptor_peers | default([]) %}
+{% for peer in receptor_peers %}
+- {{ peer['protocol'] }}-peer:
+    address: {{ peer['address'] | default(peer['host']) }}:{{ peer['port'] }}
+    redial: true
+{% if receptor_tls -%}
+    tls: tls_client
+{%- endif %}
+{% endfor %}
+{% endif %}
+
+{% if receptor_work_commands is defined -%}
+{% for command, config in receptor_work_commands.items() %}
+- work-command:
+    worktype: {{ command }}
+{% for key, value in config.items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endfor %}
+{%- endif %}
+
+{%- if receptor_kubernetes_commands is defined %}
+{% for command, config in receptor_kubernetes_commands.items() %}
+- work-kubernetes:
+    worktype: {{ command }}
+{% for key, value in config.items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endfor %}
+{% endif -%}

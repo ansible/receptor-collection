@@ -1,0 +1,10 @@
+---
+namespace: ansible
+name: receptor
+version: 0.1.0
+readme: README.md
+authors:
+  - Ansible
+description: Receptor installer
+license_file: LICENSE
+repository: https://github.com/ansible/receptor-collection

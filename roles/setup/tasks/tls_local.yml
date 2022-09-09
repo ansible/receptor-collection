@@ -1,0 +1,57 @@
+---
+- name: Ensure both TLS files are provided
+  assert:
+    quiet: true
+    that:
+      - custom_tls_certfile | default('') | length
+      - custom_tls_keyfile | default('') | length
+    fail_msg: >
+      "You must provide both 'custom_tls_certfile' and 'custom_tls_keyfile'."
+
+- name: Ensure CA certfile is provided
+  assert:
+    quiet: true
+    that:
+      - custom_ca_certfile | default('') | length
+    fail_msg: >
+      "You must provide the public CA file when providing custom TLS certificates."
+
+- name: Check TLS private key modulus
+  delegate_to: localhost
+  become: false
+  command: openssl rsa -modulus -noout -in "{{ custom_tls_keyfile }}"
+  register: _tls_keyfile_modulus
+
+- name: Check TLS x509 key modulus
+  delegate_to: localhost
+  become: false
+  command: openssl x509 -modulus -noout -in "{{ custom_tls_certfile }}"
+  register: _tls_certfile_modulus
+
+- name: Ensure TLS pair matches
+  assert:
+    quiet: true
+    that:
+      - _tls_keyfile_modulus.stdout == _tls_certfile_modulus.stdout
+    fail_msg: >
+      "TLS !modulus! for {{ custom_tls_keyfile }} and {{ custom_tls_certfile }} doesn't match."
+    success_msg: "TLS !modulus! for {{ custom_tls_keyfile }} and {{ custom_tls_certfile }} matches."
+
+- name: Ensure x509 certificate was signed by the expected Certificate Authority
+  delegate_to: localhost
+  become: false
+  command: openssl verify -CAfile "{{ custom_ca_certfile }}" "{{ custom_tls_certfile }}"
+
+- name: Upload TLS files
+  become: yes
+  become_user: "{{ receptor_user }}"
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0640'
+  with_items:
+    - { src: '{{ custom_tls_certfile }}', dest: '{{ receptor_tls_certfile }}' }
+    - { src: '{{ custom_tls_keyfile }}', dest: '{{ receptor_tls_keyfile }}' }
+    - { src: '{{ custom_ca_certfile }}', dest: '{{ receptor_ca_certfile }}' }

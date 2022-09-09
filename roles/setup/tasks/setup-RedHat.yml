@@ -1,0 +1,10 @@
+---
+- name: Install receptor packages
+  dnf:
+    name: "{{ receptor_packages }}"
+    state: present
+
+- name: Install dependencies specific to the node type
+  dnf:
+    name: "{{ receptor_dependencies | default([]) }}"
+    state: present
