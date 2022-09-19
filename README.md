@@ -11,7 +11,6 @@ Available variables are listed below, along with default values.
 
     receptor_packages:
       - receptor
-      - receptorctl
 
 Set the names of the packages needed to install Receptor.
 
