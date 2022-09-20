@@ -1,10 +1,10 @@
 ---
 - name: Install receptor packages
-  dnf:
+  ansible.builtin.dnf:
     name: "{{ receptor_packages }}"
     state: present
 
 - name: Install dependencies specific to the node type
-  dnf:
+  ansible.builtin.dnf:
     name: "{{ receptor_dependencies | default([]) }}"
     state: present
