@@ -15,7 +15,7 @@
   when: receptor_sign or receptor_verify
 
 - name: Deploy receptor config
-  template:
+  ansible.builtin.template:
     src: templates/receptor.conf.j2
     dest: "{{ receptor_config_path }}/receptor.conf"
     mode: '0644'
@@ -25,8 +25,8 @@
   #   - "Receptor Reload"
 
 - name: Start Receptor service
-  systemd:
+  ansible.builtin.systemd:
     name: receptor
     state: started
-    daemon_reload: yes
-    enabled: yes
+    daemon_reload: true
+    enabled: true

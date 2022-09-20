@@ -1,12 +1,12 @@
 ---
 - name: Create Receptor cert directories
-  file:
+  ansible.builtin.file:
     dest: "{{ item }}"
     state: directory
     mode: '0750'
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
-    recurse: yes
+    recurse: true
   with_items:
     - "{{ receptor_tls_dir }}"
     - "{{ receptor_tls_ca_dir }}"
@@ -16,7 +16,7 @@
   when: custom_tls_certfile is defined or custom_tls_keyfile is defined
 
 - name: Set TLS file permissions
-  file:
+  ansible.builtin.file:
     dest: "{{ item }}"
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"

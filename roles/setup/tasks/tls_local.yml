@@ -1,6 +1,6 @@
 ---
 - name: Ensure both TLS files are provided
-  assert:
+  ansible.builtin.assert:
     quiet: true
     that:
       - custom_tls_certfile | default('') | length
@@ -9,7 +9,7 @@
       "You must provide both 'custom_tls_certfile' and 'custom_tls_keyfile'."
 
 - name: Ensure CA certfile is provided
-  assert:
+  ansible.builtin.assert:
     quiet: true
     that:
       - custom_ca_certfile | default('') | length
@@ -19,17 +19,19 @@
 - name: Check TLS private key modulus
   delegate_to: localhost
   become: false
-  command: openssl rsa -modulus -noout -in "{{ custom_tls_keyfile }}"
+  ansible.builtin.command: openssl rsa -modulus -noout -in "{{ custom_tls_keyfile }}"
   register: _tls_keyfile_modulus
+  changed_when: false
 
 - name: Check TLS x509 key modulus
   delegate_to: localhost
   become: false
-  command: openssl x509 -modulus -noout -in "{{ custom_tls_certfile }}"
+  ansible.builtin.command: openssl x509 -modulus -noout -in "{{ custom_tls_certfile }}"
   register: _tls_certfile_modulus
+  changed_when: false
 
 - name: Ensure TLS pair matches
-  assert:
+  ansible.builtin.assert:
     quiet: true
     that:
       - _tls_keyfile_modulus.stdout == _tls_certfile_modulus.stdout
@@ -40,12 +42,13 @@
 - name: Ensure x509 certificate was signed by the expected Certificate Authority
   delegate_to: localhost
   become: false
-  command: openssl verify -CAfile "{{ custom_ca_certfile }}" "{{ custom_tls_certfile }}"
+  ansible.builtin.command: openssl verify -CAfile "{{ custom_ca_certfile }}" "{{ custom_tls_certfile }}"
+  changed_when: false
 
 - name: Upload TLS files
-  become: yes
+  become: true
   become_user: "{{ receptor_user }}"
-  copy:
+  ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{ receptor_user }}"
