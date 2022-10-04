@@ -1,0 +1,20 @@
+ancestor: null
+releases:
+  1.0.0:
+    changes:
+      bugfixes:
+      - roles/setup - As well as preferring 'true' to 'yes', and marking commands
+        that don't change anything as always unchanged.
+      major_changes:
+      - prepare for release - updated some formatting as well as including changelogs
+        + EE.yml file for certification
+      minor_changes:
+      - don't install receptorctl - upstream users will install via pip instead
+      - update galaxy.yml - added tags and added runtime file for ansible version
+        support
+    fragments:
+    - 10-add-additonal-metadata.yml
+    - 4-do-not-install-receptorctl-package.yml
+    - 7-use-the-fully-qualified-collection-name-for-the-ansible-builtins.yml
+    - 8-publish-receptor-collection-to-ansible-galaxy-as-a-certified-collection.yml
+    release_date: '2022-09-29'
