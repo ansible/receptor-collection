@@ -1,0 +1,5 @@
+---
+- name: Restart Receptor service
+  ansible.builtin.systemd:
+    name: receptor
+    state: restarted
