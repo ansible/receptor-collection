@@ -10,4 +10,3 @@ jobs:
 
       - name: Run ansible-lint
         uses: ansible-community/ansible-lint-action@v6.5.2
-        run: ansible-lint --exclude changelogs/
