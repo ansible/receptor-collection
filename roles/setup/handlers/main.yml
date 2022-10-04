@@ -5,7 +5,7 @@
     state: restarted
 
 - name: Reload Receptor
-  shell: receptorctl --socket {{ receptor_socket_dir }}/{{ receptor_control_filename }} reload
+  ansible.builtin.command: receptorctl --socket {{ receptor_socket_dir }}/{{ receptor_control_filename }} reload
   become: yes
   become_user: "{{ receptor_user }}"
   register: ctl_out
