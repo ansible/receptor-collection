@@ -3,3 +3,19 @@
   ansible.builtin.systemd:
     name: receptor
     state: restarted
+
+- name: Reload Receptor
+  shell: receptorctl --socket {{ receptor_socket_dir }}/{{ receptor_control_filename }} reload
+  become: yes
+  become_user: "{{ receptor_user }}"
+  register: ctl_out
+  listen: Reload Receptor service
+  ignore_errors: true
+  failed_when: ctl_out.rc != 0 or ctl_out.stdout.startswith("Error:")
+
+- name: Restart Receptor if reload failed
+  ansible.builtin.systemd:
+    name: receptor
+    state: restarted
+  listen: Reload Receptor service
+  when: ctl_out is not defined or ctl_out is failed
