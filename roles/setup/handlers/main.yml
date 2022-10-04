@@ -6,7 +6,7 @@
 
 - name: Reload Receptor
   ansible.builtin.command: receptorctl --socket {{ receptor_socket_dir }}/{{ receptor_control_filename }} reload
-  become: yes
+  become: true
   become_user: "{{ receptor_user }}"
   register: ctl_out
   listen: Reload Receptor service
