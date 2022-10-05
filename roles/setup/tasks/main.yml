@@ -22,7 +22,7 @@
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
   notify:
-    - Restart Receptor service
+    - Reload Receptor service
 
 - name: Start Receptor service
   ansible.builtin.systemd:

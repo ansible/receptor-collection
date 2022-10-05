@@ -7,7 +7,7 @@
     owner: root
     group: root
   notify:
-    - Reload Receptor service
+    - Restart Receptor service
 
 - name: Ensure systemd override directory exists
   ansible.builtin.file:
