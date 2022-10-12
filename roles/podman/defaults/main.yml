@@ -1,0 +1,8 @@
+---
+podman_user: 'podman'
+podman_group: 'podman'
+
+default_runtime: 'crun'
+default_cgroup_manager: 'cgroupfs'
+
+_hostname: "{{ routable_hostname | default(ansible_host) }}"

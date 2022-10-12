@@ -1,0 +1,50 @@
+---
+# Variable configuration.
+- include_tasks: variables.yml
+
+# Setup/install tasks.
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Create directory for podman runtime config
+  ansible.builtin.file:
+    path: "~{{ podman_user }}/.config/containers"
+    state: directory
+    mode: 0700
+    owner: "{{ podman_user }}"
+    group: "{{ podman_group }}"
+    recurse: true
+
+- name: Configure podman default runtime
+  ansible.builtin.copy:
+    content: |
+      [engine]
+      runtime = "{{ default_runtime }}"
+      cgroup_manager = "{{ default_cgroup_manager }}"
+    dest: "~{{ podman_user }}/.config/containers/containers.conf"
+    owner: "{{ podman_user }}"
+    group: "{{ podman_group }}"
+    mode: 0600
+
+- name: Create empty mounts config file to avoid permissions error message
+  ansible.builtin.copy:
+    content: ""
+    dest: "~{{ podman_user }}/.config/containers/mounts.conf"
+    force: false
+    owner: "{{ podman_user }}"
+    group: "{{ podman_group }}"
+    mode: 0600
+
+- name: Ensure registries.conf.d exists
+  ansible.builtin.file:
+    path: /etc/containers/registries.conf.d/
+    state: directory
+    recurse: true
+    mode: 0755
+
+- name: Force fully qualified image names to be provided to podman pull
+  ansible.builtin.copy:
+    content: |
+      unqualified-search-registries = []
+    dest: /etc/containers/registries.conf.d/force-fully-qualified-images.conf
+    mode: 0644

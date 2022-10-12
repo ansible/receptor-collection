@@ -1,4 +1,4 @@
-# Ansible Role: Receptor
+# Ansible Role: Setup
 
 Installs and configures a Receptor node on RHEL/CentOS/Fedora servers.
 
@@ -214,6 +214,6 @@ for more information.
 
 ---
 
-## License
+# License
 
 Apache 2
