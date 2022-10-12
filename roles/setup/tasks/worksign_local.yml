@@ -7,6 +7,8 @@
     group: "{{ receptor_group }}"
     mode: '0640'
   when: receptor_sign
+  notify:
+    - Restart Receptor service
 
 - name: Distribute public work signing key
   ansible.builtin.copy:
@@ -16,3 +18,5 @@
     group: "{{ receptor_group }}"
     mode: '0640'
   when: receptor_verify
+  notify:
+    - Restart Receptor service

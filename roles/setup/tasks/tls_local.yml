@@ -58,3 +58,5 @@
     - { src: '{{ custom_tls_certfile }}', dest: '{{ receptor_tls_certfile }}' }
     - { src: '{{ custom_tls_keyfile }}', dest: '{{ receptor_tls_keyfile }}' }
     - { src: '{{ custom_ca_certfile }}', dest: '{{ receptor_ca_certfile }}' }
+  notify:
+    - Restart Receptor service

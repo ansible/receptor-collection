@@ -6,6 +6,8 @@
     mode: '0600'
     owner: root
     group: root
+  notify:
+    - Restart Receptor service
 
 - name: Ensure systemd override directory exists
   ansible.builtin.file:
@@ -22,7 +24,8 @@
     mode: '0644'
     owner: root
     group: root
-#  notify: Restart Receptor
+  notify:
+    - Restart Receptor service
 
 - name: Configure the receptor socket directory
   ansible.builtin.file:
