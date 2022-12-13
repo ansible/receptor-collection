@@ -1,0 +1,15 @@
+[Unit]
+Description=Ansible Receptor for Linux
+After=network.target
+StartLimitIntervalSec=0[Service]
+Type=simple
+Restart=always
+RestartSec=1
+
+[Service]
+ExecStart=/usr/bin/receptor --config /etc/receptor/receptor.conf
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
+Alias=receptor.service

@@ -1,0 +1,43 @@
+---
+- name: Install receptor packages
+  ansible.builtin.apt:
+    name: "{{ receptor_packages }}"
+    state: present
+
+- name: Clone ansible-receptor repository
+  ansible.builtin.git:
+    repo: "{{ receptor_github_url }}"
+    dest: /tmp/receptor
+
+- name: Build ansible-receptor
+  community.general.make:
+    chdir: /tmp/receptor
+
+- name: Copy receptor's build to /urs/bin/receptor
+  ansible.builtin.copy:
+    src: /tmp/receptor/receptor
+    dest: /urs/bin/receptor
+    remote_src: true
+
+- name: Add receptor's path to profile
+  ansible.builtin.copy:
+    dest: /etc/profile.d/receptor.sh
+    content: 'PATH=$PATH:/urs/bin/receptor'  
+
+- name: Create receptor's systemd service
+  ansible.builtin.template:
+    src: templates/systemd_receptor.conf.j2
+    dest: /etc/systemd/system/receptor.service
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Clean receptor folder
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/receptor
+
+- name: Install dependencies specific to the node type
+  ansible.builtin.apt:
+    name: "{{ receptor_dependencies | default([]) }}"
+    state: present
