@@ -4,10 +4,16 @@
     name: "{{ receptor_packages }}"
     state: present
 
+- name: Clean receptor folder
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/receptor
+
 - name: Clone ansible-receptor repository
   ansible.builtin.git:
     repo: "{{ receptor_github_url }}"
     dest: /tmp/receptor
+    force: true
 
 - name: Build ansible-receptor
   community.general.make:
