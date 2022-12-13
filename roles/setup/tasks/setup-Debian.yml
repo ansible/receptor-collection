@@ -22,7 +22,7 @@
 - name: Copy receptor's build to /urs/bin/receptor
   ansible.builtin.copy:
     src: /tmp/receptor/receptor
-    dest: /urs/bin/receptor
+    dest: /usr/bin/receptor
     remote_src: true
 
 - name: Add receptor's path to profile
