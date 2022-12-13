@@ -28,7 +28,7 @@
 - name: Add receptor's path to profile
   ansible.builtin.copy:
     dest: /etc/profile.d/receptor.sh
-    content: 'PATH=$PATH:/urs/bin/receptor'  
+    content: 'PATH=$PATH:/usr/bin/receptor'  
 
 - name: Create receptor's systemd service
   ansible.builtin.template:
