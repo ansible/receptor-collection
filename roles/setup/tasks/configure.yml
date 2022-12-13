@@ -30,6 +30,7 @@
     state: directory
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
+    recurse: true
     mode: '0750'
 
 - name: Create tmpfiles.d entry for receptor socket directory
