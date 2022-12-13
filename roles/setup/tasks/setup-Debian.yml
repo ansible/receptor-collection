@@ -19,7 +19,7 @@
   community.general.make:
     chdir: /tmp/receptor
 
-- name: Copy receptor's build to /urs/bin/receptor
+- name: Copy receptor's build to /usr/bin/receptor
   ansible.builtin.copy:
     src: /tmp/receptor/receptor
     dest: /usr/bin/receptor
@@ -33,7 +33,7 @@
 - name: Create receptor's systemd service
   ansible.builtin.template:
     src: templates/systemd_receptor.conf.j2
-    dest: /etc/systemd/system/receptor.service
+    dest: /lib/systemd/system/receptor.service
     mode: '0644'
     owner: root
     group: root
