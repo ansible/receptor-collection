@@ -1,0 +1,31 @@
+---
+skip_setup: false
+skip_build: false
+
+download_dir: /tmp
+receptor_git_folder: receptor-git
+receptor_make_folder: receptor
+receptor_git_path: "{{ download_dir }}/{{ receptor_git_folder }}"
+receptor_make_path: "{{ receptor_git_path }}/{{ receptor_make_folder }}"
+receptor_install_dir: '/usr/local/receptor'
+receptor_version: v1.3.0
+receptor_github_url: https://github.com/ansible/receptor.git
+
+golang_version: 1.19.5
+
+golang_sha:
+  1.19.5:
+    amd64: 36519702ae2fd573c9869461990ae550c8c0d955cd28d2827a6b159fda81ff95
+    386: f68331aa7458a3598060595f5601d5731fd452bb2c62ff23095ddad68854e510
+    armv6l: ec14f04bdaf4a62bdcf8b55b9b6434cc27c2df7d214d0bb7076a7597283b026a
+    arm64: fc0aa29c933cec8d76f5435d859aaf42249aa08c74eb2d154689ae44c08d23b
+
+available_architectures:
+  x86_64: "amd64"
+  i686: "386"
+  aarch64: "arm64"
+  armv6l: "armv6l"
+
+golang_mirror: 'https://storage.googleapis.com/golang'
+golang_install_dir: '/usr/local/go'
+golang_gopath:

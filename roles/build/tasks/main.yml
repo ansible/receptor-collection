@@ -1,0 +1,17 @@
+---
+- name: Geather facts
+  ansible.builtin.setup:
+
+- include_tasks: setup.yml
+  when: skip_setup is not defined or skip_setup is false
+
+- include_tasks: build.yml
+  when: skip_build is not defined or skip_build is false
+
+- name: Clean downloaded folder
+  ansible.builtin.file:
+    state: absent
+    path: "{{ item }}"
+  loop:
+    - "{{ download_dir }}/{{ golang_filename }}"
+    - "{{ receptor_git_path }}"

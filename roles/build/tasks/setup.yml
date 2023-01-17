@@ -1,0 +1,65 @@
+---
+- name: Set golang architecture
+  ansible.builtin.set_fact:
+    golang_architecture: "{{ available_architectures[(ansible_architecture | lower)] | default(None) }}"
+
+- name: Assert Supported architecture
+  ansible.builtin.assert:
+    that:
+      - "golang_architecture not in (None, '')"
+    fail_msg: "Unsupported architecture {{ ansible_architecture }}"
+    success_msg: "Supported architecture {{ ansible_architecture }}"
+
+- name: Set golang sha
+  set_fact:
+    golang_sha: "{{ golang_sha[golang_version][golang_architecture] | default(None) }}"
+  
+- name: Assert Supported Go version
+  ansible.builtin.assert:
+    that:
+      - "golang_sha not in (None, '')"
+    fail_msg: "Unsupported go version: {{ golang_version }}"
+    success_msg: "Supported go version: {{ golang_version }}"
+
+- name: Download Go language SDK
+  ansible.builtin.get_url:
+    url: '{{ golang_mirror }}/{{ golang_filename }}'
+    dest: '{{ download_dir }}/{{ golang_filename }}'
+    checksum: 'sha256:{{ golang_sha }}'
+    force: no
+    validate_certs: yes
+    mode: 'u=rw,go=r'
+
+- name: Create Go language SDK installation directory
+  ansible.builtin.file:
+    state: directory
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
+    dest: '{{ golang_install_dir }}'
+
+- name: Install Go language SDK
+  ansible.builtin.unarchive:
+    src: '{{ download_dir }}/{{ golang_filename }}'
+    remote_src: yes
+    dest: '{{ golang_install_dir }}'
+    owner: root
+    group: root
+
+- name: Make sure /etc/profile.d exists
+  ansible.builtin.file:
+    path: /etc/profile.d
+    state: directory
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
+
+- name: Export Go environment variables
+  ansible.builtin.template:
+    src: golang.sh.j2
+    dest: /etc/profile.d/golang.sh
+    owner: root
+    group: root
+    mode: 'u=rw,go=r'
+
+
