@@ -3,15 +3,21 @@
   ansible.builtin.setup:
 
 - include_tasks: setup.yml
-  when: skip_setup is not defined or skip_setup is false
+  when: not skip_setup
 
 - include_tasks: build.yml
-  when: skip_build is not defined or skip_build is false
+  when: not skip_build
 
-- name: Clean downloaded folder
-  ansible.builtin.file:
-    state: absent
-    path: "{{ item }}"
-  loop:
-    - "{{ download_dir }}/{{ golang_filename }}"
-    - "{{ receptor_git_path }}"
+- include_tasks: configure.yml
+  when: not skip_configure
+
+- name: Copy receptor's build to "{{ download_dir }}/{{ receptor_make_folder }}"
+  ansible.builtin.copy:
+    src: "{{ receptor_make_path }}"
+    dest: "{{ download_dir }}/receptor-bin"
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
+    remote_src: true
+  when: skip_configure
+

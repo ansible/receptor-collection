@@ -61,3 +61,10 @@
     owner: root
     group: root
     mode: 'u=rw,go=r'
+
+- name: Clean downloaded folder
+  ansible.builtin.file:
+    state: absent
+    path: "{{ item }}"
+  loop:
+    - "{{ download_dir }}/{{ golang_filename }}"

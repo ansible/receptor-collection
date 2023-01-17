@@ -32,6 +32,7 @@ This role will install golang build receptor from source code.
 | golang_install_dir | string |  `/usr/local/go`  | Folder where go will be installed |
 | skip_setup | bool |  `false`  | If set to true, we skip setup that is responsible of install go |
 | skip_build | bool |  `false`  | If set to true, we skip build that is responsible of install receptor |
+| skip_configure | bool |  `false`  | If set to true, we skip the configuration of receptor service, so you have only the binary file on /{{ download_dir }}/receptor-bin |
 
 ### golang_sha
 

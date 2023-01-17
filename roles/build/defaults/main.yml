@@ -1,6 +1,7 @@
 ---
 skip_setup: false
 skip_build: false
+skip_configure: false
 
 download_dir: /tmp
 receptor_git_folder: receptor-git
