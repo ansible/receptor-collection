@@ -1,14 +1,19 @@
+# Table of Contents
+
+- [Table of Contents](#table-of-contents)
 - [Ansible Role: Build](#ansible-role-build)
   - [Role Variables](#role-variables)
     - [golang\_sha](#golang_sha)
     - [available\_architectures](#available_architectures)
 
+<br>
 
 # Ansible Role: Build
 
 Build a Receptor node on RHEL/CentOS/Debian/Ubuntu servers.
 This role will install golang build receptor from source code.
-
+<br>
+<br>
 
 ## Role Variables
 
