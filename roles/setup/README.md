@@ -214,6 +214,22 @@ for more information.
 
 ---
 
+    local_receptor: false
+
+Hostvar to designate that this host have a local receptor bin to be configured.
+
+---
+
+    local_receptor_path: '/tmp/receptor-bin' (used only when local_receptor is true)
+
+Path on the local filesystem to the receptor binary.
+
+---
+    receptor_install_dir: '/usr/local/receptor' (used only when local_receptor is true)
+
+Path on the server to install the receptor binary.
+
+
 # License
 
 Apache 2
