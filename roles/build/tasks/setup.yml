@@ -11,7 +11,7 @@
     success_msg: "Supported architecture {{ ansible_architecture }}"
 
 - name: Set golang sha
-  set_fact:
+  ansible.builtin.set_fact:
     golang_sha: "{{ golang_sha[golang_version][golang_architecture] | default(None) }}"
 
 - name: Assert Supported Go version
