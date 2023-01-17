@@ -1,0 +1,11 @@
+---
+- name: Install podman packages
+  ansible.builtin.apt:
+    name: "{{ podman_packages }}"
+    state: present
+
+# enable linger for podman_user when is not root
+- name: Enable linger for {{ podman_user }} user
+  ansible.builtin.command: "loginctl enable-linger {{ podman_user }}"
+  when: 
+    - podman_user != 'root'

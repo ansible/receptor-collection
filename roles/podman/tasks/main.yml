@@ -3,8 +3,8 @@
 - include_tasks: variables.yml
 
 # Setup/install tasks.
-- include_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- include_tasks: "setup-{{ ansible_os_family }}.yml"
+  when: ansible_os_family in ['RedHat', 'Debian']
 
 - name: Create directory for podman runtime config
   ansible.builtin.file:
@@ -31,6 +31,19 @@
     content: ""
     dest: "~{{ podman_user }}/.config/containers/mounts.conf"
     force: false
+    owner: "{{ podman_user }}"
+    group: "{{ podman_group }}"
+    mode: 0600
+
+- name: Create storage.conf to defer fuse-overlayfs on rootless env
+  ansible.builtin.copy:
+    content:  |
+      [storage]
+      driver = "overlay"
+      [storage.options]
+      mount_program = "/usr/bin/fuse-overlayfs"
+    dest: "~{{ podman_user }}/.config/containers/storage.conf"
+    force: true
     owner: "{{ podman_user }}"
     group: "{{ podman_group }}"
     mode: 0600

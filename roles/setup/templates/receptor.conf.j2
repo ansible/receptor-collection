@@ -56,9 +56,9 @@
 - {{ peer['protocol'] }}-peer:
     address: {{ peer['address'] | default(peer['host']) }}:{{ peer['port'] }}
     redial: true
-{% if receptor_tls -%}
+    {% if receptor_tls -%}
     tls: tls_client
-{%- endif %}
+    {%- endif %}
 {% endfor %}
 {% endif %}
 
