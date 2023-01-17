@@ -18,12 +18,18 @@
   ansible.builtin.copy:
     src: "{{ receptor_make_path }}"
     dest: "{{ receptor_install_dir }}"
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
     remote_src: true
 
 - name: Add receptor's path to profile
   ansible.builtin.copy:
     dest: /etc/profile.d/receptor.sh
-    content: "PATH=$PATH:{{ receptor_install_dir }}" 
+    content: "PATH=$PATH:{{ receptor_install_dir }}"
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
 
 - name: Create receptor's systemd service
   ansible.builtin.template:

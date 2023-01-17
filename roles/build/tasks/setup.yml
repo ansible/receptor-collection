@@ -13,7 +13,7 @@
 - name: Set golang sha
   set_fact:
     golang_sha: "{{ golang_sha[golang_version][golang_architecture] | default(None) }}"
-  
+
 - name: Assert Supported Go version
   ansible.builtin.assert:
     that:
@@ -26,8 +26,8 @@
     url: '{{ golang_mirror }}/{{ golang_filename }}'
     dest: '{{ download_dir }}/{{ golang_filename }}'
     checksum: 'sha256:{{ golang_sha }}'
-    force: no
-    validate_certs: yes
+    force: false
+    validate_certs: true
     mode: 'u=rw,go=r'
 
 - name: Create Go language SDK installation directory
@@ -41,7 +41,7 @@
 - name: Install Go language SDK
   ansible.builtin.unarchive:
     src: '{{ download_dir }}/{{ golang_filename }}'
-    remote_src: yes
+    remote_src: true
     dest: '{{ golang_install_dir }}'
     owner: root
     group: root
@@ -61,5 +61,3 @@
     owner: root
     group: root
     mode: 'u=rw,go=r'
-
-

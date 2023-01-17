@@ -1,1 +1,2 @@
+---
 golang_filename: 'go{{ golang_version }}.linux-{{ golang_architecture }}.tar.gz'
