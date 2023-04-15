@@ -14,15 +14,7 @@
 - include_tasks: worksign.yml
   when: receptor_sign or receptor_verify
 
-- name: Deploy receptor config
-  ansible.builtin.template:
-    src: templates/receptor.conf.j2
-    dest: "{{ receptor_config_path }}/receptor.conf"
-    mode: '0644'
-    owner: "{{ receptor_user }}"
-    group: "{{ receptor_group }}"
-  # notify:
-  #   - "Receptor Reload"
+- include_tasks: generate_config.yml
 
 - name: Start Receptor service
   ansible.builtin.systemd:
