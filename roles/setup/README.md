@@ -216,19 +216,57 @@ for more information.
 
     local_receptor: false
 
-Hostvar to designate that this host have a local receptor bin to be configured.
+Put it to true if you want to use a local receptor bin (or download it from github) instead of package release for your distro.
 
 ---
 
-    local_receptor_path: '/tmp/receptor-bin' (used only when local_receptor is true)
+---
 
-Path on the local filesystem to the receptor binary.
+    local_receptor_path: '/tmp/receptor-bin'
+
+Path where is stored receptor bin file.
 
 ---
-    receptor_install_dir: '/usr/local/receptor' (used only when local_receptor is true)
 
-Path on the server to install the receptor binary.
+---
 
+    receptor_install_dir: '/usr/local'
+
+Path where receptor bin will be moved.
+
+---
+
+---
+
+    receptor_github_owner: 'ansible'
+
+Owner of github repo where we search and download package if local_receptor_path not exists.
+
+---
+
+---
+
+    receptor_github_repo: 'receptor'
+
+Repository github where we search and download package if local_receptor_path not exists.
+
+---
+
+---
+
+    receptor_github_release: # not set, if set we use it for download package
+
+Repository release where we search and download package if local_receptor_path not exists.
+
+---
+
+---
+
+    receptor_service_name: 'receptor'
+
+Name of service inside the OS. Used only in case local_receptor is true and if you want multiple service running on OS.
+
+---
 
 # License
 

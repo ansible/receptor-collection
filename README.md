@@ -256,7 +256,7 @@ Repository github where we search and download package if local_receptor_path no
 
 ---
 
-    receptor_git_version: v1.3.1
+    receptor_github_release: # not set, if set we use it for download package
 
 Repository version where we search and download package if local_receptor_path not exists.
 
@@ -266,8 +266,7 @@ Repository version where we search and download package if local_receptor_path n
 
     receptor_service_name: 'receptor'
 
-Name of service inside the OS. Used only in case local_receptor is true.
-
+Name of service inside the OS. Used only in case local_receptor is true and if you want multiple service running on OS.
 ---
 
 

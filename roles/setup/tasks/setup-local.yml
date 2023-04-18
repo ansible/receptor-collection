@@ -1,35 +1,52 @@
 ---
 # if bin not exists we download it from github repo/tag
 
-- name: Task name
+- name: Check in {{ local_receptor_path }} exist
   ansible.builtin.stat:
-    path: "{{ local_receptor_path }}"
+    path: "{{ local_receptor_path }}/receptor"
   register: local_receptor_stat
 
 - name: Download receptor bin from github
   block:
-    - name: Create receptor {{ local_receptor_path }}
+    - name: Create local receptor path
       ansible.builtin.file:
         path: "{{ local_receptor_path }}"
         state: directory
 
     - name: Get latest release of receptor repository
       ansible.builtin.uri:
-        url: "https://api.github.com/repos/{{ receptor_github_owner }}/{{ receptor_github_repo }}/releases/latest"
+        url: "https://api.github.com/repos/{{ receptor_github_owner }}/\
+          {{ receptor_github_repo }}/releases/latest"
       register: latest_receptor_release
 
-    - name: Download receptor from latest release
+    - name: Set receptor downloads facts
+      ansible.builtin.set_fact:
+        receptor_tag: "{{ (receptor_github_release |
+          default(latest_receptor_release.json.tag_name)) }}"
+        receptor_arch: "{{ arch_mapping[ansible_architecture] | default(ansible_architecture) }}"
+
+    - name: Download receptor from {{ receptor_tag }} release
       ansible.builtin.get_url:
-        url: "https://github.com/{{ receptor_github_owner }}/{{ receptor_github_repo }}/releases/download/{{ latest_receptor_release }}/{{ receptor_github_repo }}_{{ latest_receptor_release }}_linux_amd64.tar.gz"                     
-        dest: "{{ local_receptor_path }}"/{{ receptor_github_repo }}_{{ latest_receptor_release }}_linux_amd64.tar.gz"
-    
+        url: "https://github.com/{{ receptor_github_owner }}/\
+          {{ receptor_github_repo }}/releases/\
+          download/{{ receptor_tag }}/{{ receptor_github_repo }}_\
+          {{ receptor_tag | replace('v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
+        dest: "{{ local_receptor_path }}"
+
     - name: Unarchive receptor release
       ansible.builtin.unarchive:
-        src: "{{ local_receptor_path }}//{{ receptor_github_repo }}_{{ latest_receptor_release }}_linux_amd64.tar.gz"
+        src: "{{ local_receptor_path }}/{{ receptor_github_repo }}_\
+          {{ receptor_tag | replace('v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
         dest: "{{ receptor_install_dir }}"
         remote_src: true
 
-  when: not register_name.stat.exists
+    - name: Remove receptor archive
+      ansible.builtin.file:
+        path: "{{ local_receptor_path }}/{{ receptor_github_repo }}_\
+          {{ receptor_tag | replace('v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
+        state: absent
+
+  when: not local_receptor_stat.stat.exists
 
 - name: Copy receptor's build to "{{ receptor_install_dir }}"
   ansible.builtin.copy:
@@ -39,7 +56,7 @@
     group: root
     mode: 'u=rwx,go=rx'
     remote_src: true
-  when: register_name.stat.exists
+  when: local_receptor_stat.stat.exists
 
 - name: Add receptor's path to profile
   ansible.builtin.copy:

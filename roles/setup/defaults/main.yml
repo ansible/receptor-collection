@@ -43,6 +43,10 @@ receptor_install_dir: '/usr/local'
 receptor_github_owner: ansible
 receptor_github_repo: receptor
 
-receptor_git_version: v1.3.1
 receptor_service_name: receptor
-
+arch_mapping:
+  armv6l: armhf
+  armv7l: armhf
+  aarch64: arm64
+  x86_64: amd64
+  i386: i386
