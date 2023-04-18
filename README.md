@@ -214,6 +214,64 @@ for more information.
 
 ---
 
+---
+
+    local_receptor: false
+
+Put it to true if you want to use a local receptor bin (or download it from github) instead of package release for your distro.
+
+---
+
+---
+
+    local_receptor_path: '/tmp/receptor-bin'
+
+Path where is stored receptor bin file.
+
+---
+
+---
+
+    receptor_install_dir: '/usr/local'
+
+Path where receptor bin will be moved.
+
+---
+
+---
+
+    receptor_github_owner: 'ansible'
+
+Owner of github repo where we search and download package if local_receptor_path not exists.
+
+---
+
+---
+
+    receptor_github_repo: 'receptor'
+
+Repository github where we search and download package if local_receptor_path not exists.
+
+---
+
+---
+
+    receptor_git_version: v1.3.1
+
+Repository version where we search and download package if local_receptor_path not exists.
+
+---
+
+---
+
+    receptor_service_name: 'receptor'
+
+Name of service inside the OS. Used only in case local_receptor is true.
+
+---
+
+
+
 # Ansible Role: Podman
 
 Installs and configures Podman on RHEL/CentOS/Fedora servers.

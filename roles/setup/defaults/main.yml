@@ -42,3 +42,7 @@ receptor_install_dir: '/usr/local'
 
 receptor_github_owner: ansible
 receptor_github_repo: receptor
+
+receptor_git_version: v1.3.1
+receptor_service_name: receptor
+

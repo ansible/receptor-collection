@@ -41,7 +41,7 @@
 
 - name: Start Receptor service
   ansible.builtin.systemd:
-    name: receptor
+    name: "{{ receptor_service_name }}"
     state: restarted
     daemon_reload: true
     enabled: true
