@@ -1,7 +1,7 @@
 ---
 # if bin not exists we download it from github repo/tag
 
-- name: Check in {{ local_receptor_path }} exist
+- name: Check in {{ local_receptor_path }}/receptor exist
   ansible.builtin.stat:
     path: "{{ local_receptor_path }}/receptor"
   register: local_receptor_stat
@@ -30,20 +30,20 @@
         url: "https://github.com/{{ receptor_github_owner }}/\
           {{ receptor_github_repo }}/releases/\
           download/{{ receptor_tag }}/{{ receptor_github_repo }}_\
-          {{ receptor_tag | replace('v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
+          {{ receptor_tag | regex_replace('^v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
         dest: "{{ local_receptor_path }}"
 
     - name: Unarchive receptor release
       ansible.builtin.unarchive:
         src: "{{ local_receptor_path }}/{{ receptor_github_repo }}_\
-          {{ receptor_tag | replace('v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
+          {{ receptor_tag | regex_replace('^v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
         dest: "{{ receptor_install_dir }}"
         remote_src: true
 
     - name: Remove receptor archive
       ansible.builtin.file:
         path: "{{ local_receptor_path }}/{{ receptor_github_repo }}_\
-          {{ receptor_tag | replace('v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
+          {{ receptor_tag | regex_replace('^v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
         state: absent
 
   when: not local_receptor_stat.stat.exists
