@@ -4,7 +4,7 @@ After=network.target
 StartLimitIntervalSec=0[Service]
 
 [Service]
-ExecStart=/usr/bin/receptor --config {{ receptor_config_path }}/receptor.conf
+ExecStart={{ receptor_install_dir }}/receptor --config {{ receptor_config_path }}/receptor.conf
 TimeoutStopSec=5
 Type=simple
 Restart=always

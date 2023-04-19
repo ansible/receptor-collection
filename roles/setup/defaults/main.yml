@@ -38,7 +38,7 @@ receptor_host_identifier: "{{ (_hostname == 'localhost') | ternary('localhost.lo
 
 local_receptor: false
 local_receptor_path: '/tmp/receptor-bin'
-receptor_install_dir: '/usr/local'
+receptor_install_dir: '/usr/bin'
 
 receptor_github_owner: ansible
 receptor_github_repo: receptor
