@@ -7,5 +7,5 @@
 # enable linger for podman_user when is not root
 - name: Enable linger for {{ podman_user }} user
   ansible.builtin.command: "loginctl enable-linger {{ podman_user }}"
-  when: 
+  when:
     - podman_user != 'root'

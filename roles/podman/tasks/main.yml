@@ -37,7 +37,7 @@
 
 - name: Create storage.conf to defer fuse-overlayfs on rootless env
   ansible.builtin.copy:
-    content:  |
+    content: |
       [storage]
       driver = "overlay"
       [storage.options]
