@@ -68,7 +68,7 @@
 
 - name: Create receptor's systemd service
   ansible.builtin.template:
-    src: templates/receptor.service.j2
+    src: templates/systemd_receptor.service.j2
     dest: /lib/systemd/system/receptor.service
     mode: '0644'
     owner: root
