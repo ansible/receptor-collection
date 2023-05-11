@@ -6,7 +6,6 @@
     mode: '0750'
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
-    recurse: true
   with_items:
     - "{{ receptor_tls_dir }}"
     - "{{ receptor_tls_ca_dir }}"

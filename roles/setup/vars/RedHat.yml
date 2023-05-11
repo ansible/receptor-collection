@@ -1,3 +1,4 @@
 __receptor_packages:
   - receptor
+  - receptorctl
 systemd_folder: "/usr/lib/systemd/system"

@@ -31,6 +31,8 @@
       {{ receptor_tag | regex_replace('^v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
     dest: "{{ receptor_install_dir }}"
     remote_src: true
+  notify:
+    - Restart Receptor
 
 - name: Remove receptor archive
   ansible.builtin.file:

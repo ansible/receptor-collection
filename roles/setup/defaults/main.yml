@@ -15,6 +15,7 @@ receptor_tls_certfile: "{{ receptor_tls_dir }}/{{ receptor_host_identifier }}.cr
 receptor_tls_keyfile: "{{ receptor_tls_dir }}/{{ receptor_host_identifier }}.key"
 receptor_ca_certfile: "{{ receptor_tls_ca_dir }}/mesh-CA.crt"
 receptor_ca_keyfile: "{{ receptor_tls_ca_dir }}/mesh-CA.key"
+receptor_replace_tls: false
 
 receptor_worksign_key_dir: "/etc/receptor"
 receptor_worksign_private_keyfile: "{{ receptor_worksign_key_dir }}/work_private_key.pem"
@@ -37,7 +38,7 @@ _hostname: "{{ routable_hostname | default(ansible_host) }}"
 receptor_host_identifier: "{{ (_hostname == 'localhost') | ternary('localhost.localdomain', _hostname) }}"
 
 receptor_install_method: release # options: release, package, local
-local_receptor_bin_file: ''
+receptor_local_bin_file: ''
 receptor_install_dir: '/usr/bin'
 
 receptor_github_owner: ansible

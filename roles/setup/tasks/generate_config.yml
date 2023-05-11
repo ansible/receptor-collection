@@ -6,5 +6,5 @@
     mode: '0644'
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
-  # notify:
-  #   - "Receptor Reload"
+  notify:
+    - Reload Receptor
