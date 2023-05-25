@@ -1,14 +1,12 @@
 [Unit]
 Description=Ansible Receptor for Linux
 After=network.target
-StartLimitIntervalSec=0[Service]
+StartLimitIntervalSec=0
 
 [Service]
 ExecStart={{ receptor_install_dir }}/receptor --config {{ receptor_config_path }}/receptor.conf
-TimeoutStopSec=5
-Type=simple
-Restart=always
-RestartSec=1
+StandardOutput=append:/var/log/receptor/receptor.log
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target

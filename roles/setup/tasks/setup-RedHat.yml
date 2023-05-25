@@ -3,6 +3,7 @@
   ansible.builtin.dnf:
     name: "{{ receptor_packages }}"
     state: present
+  when: not local_receptor
 
 - name: Install dependencies specific to the node type
   ansible.builtin.dnf:

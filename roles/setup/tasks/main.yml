@@ -4,7 +4,7 @@
 
 # Setup/install tasks.
 - include_tasks: "setup-{{ ansible_os_family }}.yml"
-  when: ansible_os_family in ['RedHat', 'Debian'] and not local_receptor
+  when: ansible_os_family in ['RedHat', 'Debian']
 
 - include_tasks: "setup-local.yml"
   when: local_receptor

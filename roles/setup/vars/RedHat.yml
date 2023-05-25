@@ -1,2 +1,3 @@
 __receptor_packages:
   - receptor
+systemd_folder: "/usr/lib/systemd/system"
