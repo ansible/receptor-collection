@@ -43,6 +43,8 @@ receptor_install_dir: '/usr/bin'
 receptor_github_owner: ansible
 receptor_github_repo: receptor
 
+receptor_path_log: /var/log/receptor/receptor.log
+
 receptor_service_name: receptor
 arch_mapping:
   armv6l: armhf
