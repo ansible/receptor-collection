@@ -69,7 +69,7 @@
     mode: 'u=rwx,go=rx'
 
 - name: Create receptor's log folder
-  ansible.builtin.fole:
+  ansible.builtin.file:
     path: "{{ receptor_path_log }}"
     state: directory
     owner: root
