@@ -217,6 +217,7 @@ for more information.
     local_receptor: false
 
 Put it to true if you want to use a local receptor bin (or download it from github) instead of package release for your distro.
+For Debian we set it a true as default.
 
 ---
 
@@ -233,6 +234,14 @@ Path where is stored receptor bin file.
     receptor_install_dir: '/usr/bin'
 
 Path where receptor bin will be moved.
+
+---
+
+---
+
+    receptor_path_log: '/var/log/receptor'
+
+Path where receptor log will be sotred. Used only when local_receptor is true.
 
 ---
 
