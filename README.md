@@ -243,7 +243,7 @@ Path where receptor bin will be moved.
 
     receptor_path_log: '/var/log/receptor'
 
-Path where receptor log will be sotred. Used only when local_receptor is true.
+Receptor log directory. Used only when local_receptor is true.
 
 ---
 
