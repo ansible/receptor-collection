@@ -216,7 +216,7 @@ for more information.
 
     local_receptor: false
 
-Put it to true if you want to use a local receptor bin (or download it from github) instead of package release for your distro.
+Set to true to upload a local receptor binary instead of installing via a package manager. If no local binary is present, it will be downloaded from receptor Releases on github.
 For Debian we set it a true as default.
 
 ---
@@ -225,7 +225,7 @@ For Debian we set it a true as default.
 
     local_receptor_path: '/tmp/receptor-bin'
 
-Path where is stored receptor bin file.
+Path of local receptor binary.
 
 ---
 
@@ -233,7 +233,7 @@ Path where is stored receptor bin file.
 
     receptor_install_dir: '/usr/bin'
 
-Path where receptor bin will be moved.
+Receptor binary path on remote node.
 
 ---
 
@@ -241,7 +241,7 @@ Path where receptor bin will be moved.
 
     receptor_path_log: '/var/log/receptor'
 
-Path where receptor log will be sotred. Used only when local_receptor is true.
+Receptor log directory. Used only when local_receptor is true.
 
 ---
 
@@ -273,7 +273,7 @@ Repository release where we search and download package if local_receptor_path n
 
     receptor_service_name: 'receptor'
 
-Name of service inside the OS. Used only in case local_receptor is true and if you want multiple service running on OS.
+Name of systemd service that runs receptor. Used only when local_receptor is true.
 
 ---
 
