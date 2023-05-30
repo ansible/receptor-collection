@@ -235,7 +235,7 @@ Path where is stored receptor bin file.
 
     receptor_install_dir: '/usr/bin'
 
-Path where receptor bin will be moved.
+Receptor binary path on remote node.
 
 ---
 
