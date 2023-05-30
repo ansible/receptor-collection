@@ -218,7 +218,7 @@ for more information.
 
     local_receptor: false
 
-Put it to true if you want to use a local receptor bin (or download it from github) instead of package release for your distro.
+Set to true to upload a local receptor binary instead of installing via a package manager. If no local binary is present, it will be downloaded from receptor Releases on github.
 For Debian we set it a true as default.
 
 ---
@@ -227,7 +227,7 @@ For Debian we set it a true as default.
 
     local_receptor_path: '/tmp/receptor-bin'
 
-Path where is stored receptor bin file.
+Path of local receptor binary.
 
 ---
 
