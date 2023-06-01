@@ -1,0 +1,21 @@
+---
+- name: Stat local binary
+  delegate_to: localhost
+  become: false
+  ansible.builtin.stat:
+    path: "{{ local_receptor_bin_file }}"
+  register: bin
+
+- name: Assert binary is file
+  ansible.builtin.assert:
+    that:
+      - bin.stat.exists == True
+      - bin.stat.isdir is defined and bin.stat.isdir == False
+
+- name: Copy receptor's build to "{{ receptor_install_dir }}"
+  ansible.builtin.copy:
+    src: "{{ local_receptor_bin_file }}"
+    dest: "{{ receptor_install_dir }}/receptor"
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'

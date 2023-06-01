@@ -2,7 +2,7 @@
 receptor_user: receptor
 receptor_group: receptor
 
-receptor_config_path: '/etc/receptor'
+receptor_config_dir: '/etc/receptor'
 receptor_socket_dir: '/var/run/receptor'
 receptor_control_filename: 'receptor.sock'
 
@@ -35,3 +35,20 @@ receptor_log_level: 'info'
 
 _hostname: "{{ routable_hostname | default(ansible_host) }}"
 receptor_host_identifier: "{{ (_hostname == 'localhost') | ternary('localhost.localdomain', _hostname) }}"
+
+receptor_install_method: package # options: local, release
+local_receptor_bin_file: ''
+receptor_install_dir: '/usr/bin'
+
+receptor_github_owner: ansible
+receptor_github_repo: receptor
+
+receptor_log_dir: /var/log/receptor
+
+receptor_service_name: receptor
+arch_mapping:
+  armv6l: armhf
+  armv7l: armhf
+  aarch64: arm64
+  x86_64: amd64
+  i386: i386

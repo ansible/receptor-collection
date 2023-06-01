@@ -1,0 +1,13 @@
+[Unit]
+Description=Ansible Receptor for Linux
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+ExecStart={{ receptor_install_dir }}/receptor --config {{ receptor_config_dir }}/receptor.conf
+StandardOutput=append:{{ receptor_log_dir }}/receptor.log
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias={{ receptor_service_name }}.service

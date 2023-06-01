@@ -1,0 +1,24 @@
+---
+- name: Add receptor's path to profile
+  ansible.builtin.copy:
+    dest: /etc/profile.d/receptor.sh
+    content: "PATH=$PATH:{{ receptor_install_dir }}/receptor"
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
+
+- name: Create receptor's log folder
+  ansible.builtin.file:
+    path: "{{ receptor_log_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create receptor's systemd service
+  ansible.builtin.template:
+    src: templates/systemd_receptor.service.j2
+    dest: "{{ systemd_folder }}/receptor.service"
+    mode: '0644'
+    owner: root
+    group: root

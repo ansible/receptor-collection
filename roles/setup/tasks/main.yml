@@ -3,8 +3,30 @@
 - include_tasks: variables.yml
 
 # Setup/install tasks.
-- include_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- include_tasks: "setup-{{ ansible_os_family }}.yml"
+  when: ansible_os_family in ['RedHat', 'Debian']
+
+- include_tasks: "setup-local.yml"
+  when: receptor_install_method == 'local'
+
+- include_tasks: "setup-release.yml"
+  when: receptor_install_method == 'release'
+
+- include_tasks: "setup-service.yml"
+  when: receptor_install_method in ['release', 'local']
+
+- name: Check if receptor was installed correctly
+  ansible.builtin.command: "receptor --version"
+  register: receptor_version
+  changed_when: receptor_version.rc == 0
+  ignore_errors: true
+
+- name: Assert receptor installation
+  ansible.builtin.assert:
+    that:
+      - receptor_version.rc == 0
+    fail_msg: "Receptor not installed correctly. Please check the installation or reinstall it with local_receptor: true"
+    success_msg: "Receptor installed correctly"
 
 - include_tasks: configure.yml
 
@@ -18,7 +40,7 @@
 
 - name: Start Receptor service
   ansible.builtin.systemd:
-    name: receptor
-    state: started
+    name: "{{ receptor_service_name }}"
+    state: restarted
     daemon_reload: true
     enabled: true

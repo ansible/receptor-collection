@@ -1,0 +1,4 @@
+---
+__receptor_packages: []
+systemd_folder: "/lib/systemd/system"
+receptor_install_method: 'release'   # required beacuse on debian machine no package receptor exists
