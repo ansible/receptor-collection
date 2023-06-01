@@ -2,7 +2,7 @@
 - name: Deploy receptor config
   ansible.builtin.template:
     src: templates/receptor.conf.j2
-    dest: "{{ receptor_config_path }}/receptor.conf"
+    dest: "{{ receptor_config_dir }}/receptor.conf"
     mode: '0644'
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
