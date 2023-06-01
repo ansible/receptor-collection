@@ -7,7 +7,13 @@
   when: ansible_os_family in ['RedHat', 'Debian']
 
 - include_tasks: "setup-local.yml"
-  when: local_receptor
+  when: receptor_install_method == 'local'
+
+- include_tasks: "setup-release.yml"
+  when: receptor_install_method == 'release'
+
+- include_tasks: "setup-service.yml"
+  when: receptor_install_method in ['release', 'local']
 
 - name: Check if receptor was installed correctly
   ansible.builtin.command: "receptor --version"
@@ -33,7 +39,7 @@
 - name: Deploy receptor config
   ansible.builtin.template:
     src: templates/receptor.conf.j2
-    dest: "{{ receptor_config_path }}/receptor.conf"
+    dest: "{{ receptor_config_dir }}/receptor.conf"
     mode: '0644'
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"

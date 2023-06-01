@@ -1,0 +1,38 @@
+---
+- name: Create temp directory for tar gz file
+  ansible.builtin.tempfile:
+    state: directory
+  register: tmpdir
+
+- name: Get latest release of receptor repository
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/{{ receptor_github_owner }}/\
+      {{ receptor_github_repo }}/releases/latest"
+  register: latest_receptor_release
+
+- name: Set receptor downloads facts
+  ansible.builtin.set_fact:
+    receptor_tag: "{{ (receptor_github_release |
+      default(latest_receptor_release.json.tag_name)) }}"
+    receptor_arch: "{{ arch_mapping[ansible_architecture] | default(ansible_architecture) }}"
+
+- name: Download receptor from {{ receptor_tag }} release
+  ansible.builtin.get_url:
+    url: "https://github.com/{{ receptor_github_owner }}/\
+      {{ receptor_github_repo }}/releases/\
+      download/{{ receptor_tag }}/{{ receptor_github_repo }}_\
+      {{ receptor_tag | regex_replace('^v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
+    dest: "{{ tmpdir.path }}"
+    mode: '0644'
+
+- name: Unarchive receptor release
+  ansible.builtin.unarchive:
+    src: "/{{ tmpdir.path }}/{{ receptor_github_repo }}_\
+      {{ receptor_tag | regex_replace('^v', '') }}_{{ ansible_system | lower }}_{{ receptor_arch }}.tar.gz"
+    dest: "{{ receptor_install_dir }}"
+    remote_src: true
+
+- name: Remove receptor archive
+  ansible.builtin.file:
+    path: "{{ tmpdir.path }}"
+    state: absent

@@ -42,7 +42,7 @@ The name of the control socket file.
 
 ---
 
-    receptor_config_path: '/etc/receptor'
+    receptor_config_dir: '/etc/receptor'
 
 Path to the Receptor config file.
 
@@ -216,16 +216,18 @@ for more information.
 
 ---
 
-    local_receptor: false
+    receptor_install_method: package
 
-Set to true to upload a local receptor binary instead of installing via a package manager. If no local binary is present, it will be downloaded from receptor Releases on github.
-For Debian we set it a true as default.
+Options are 'package', 'local', or 'release'
+If 'package', will use the os-specific package manager to install receptor.
+If 'local', will upload a local receptor binary. To be paired with `local_receptor_bin_file`.
+If 'release', the receptor binary will be downloaded from receptor Releases on github.
 
 ---
 
 ---
 
-    local_receptor_path: '/tmp/receptor-bin'
+    local_receptor_bin_file: '/tmp/receptor-bin'
 
 Path of local receptor binary.
 
@@ -241,7 +243,7 @@ Receptor binary path on remote node.
 
 ---
 
-    receptor_path_log: '/var/log/receptor'
+    receptor_log_dir: '/var/log/receptor'
 
 Receptor log directory. Used only when local_receptor is true.
 
@@ -251,7 +253,7 @@ Receptor log directory. Used only when local_receptor is true.
 
     receptor_github_owner: 'ansible'
 
-Owner of github repo where we search and download package if local_receptor_path not exists.
+Owner of github repo where we search and download package if local_receptor_bin_file not exists.
 
 ---
 
@@ -259,7 +261,7 @@ Owner of github repo where we search and download package if local_receptor_path
 
     receptor_github_repo: 'receptor'
 
-Repository github where we search and download package if local_receptor_path not exists.
+Repository github where we search and download package if local_receptor_bin_file not exists.
 
 ---
 
@@ -267,7 +269,7 @@ Repository github where we search and download package if local_receptor_path no
 
     receptor_github_release: # not set, if set we use it for download package
 
-Repository version where we search and download package if local_receptor_path not exists.
+Repository version where we search and download package if local_receptor_bin_file not exists.
 
 ---
 
