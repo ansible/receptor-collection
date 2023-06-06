@@ -53,8 +53,8 @@
 
 {% if receptor_peers | default([]) %}
 {% for peer in receptor_peers %}
-- {{ peer['protocol'] }}-peer:
-    address: {{ peer['address'] | default(peer['host']) }}:{{ peer['port'] }}
+- {{ peer['protocol'] | default(receptor_protocol) }}-peer:
+    address: {{ peer['address'] | default(peer['host']) }}:{{ peer['port'] | default(receptor_port)}}
     redial: true
 {% if receptor_tls %}
     tls: tls_client
