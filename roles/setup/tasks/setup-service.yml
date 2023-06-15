@@ -18,7 +18,7 @@
 - name: Create receptor's systemd service
   ansible.builtin.template:
     src: templates/systemd_receptor.service.j2
-    dest: "{{ systemd_folder }}/receptor.service"
+    dest: "{{ systemd_folder }}/{{ receptor_service_name }}.service"
     mode: '0644'
     owner: root
     group: root

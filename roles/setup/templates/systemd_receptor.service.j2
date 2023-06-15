@@ -5,7 +5,7 @@ StartLimitIntervalSec=0
 
 [Service]
 ExecStart={{ receptor_install_dir }}/receptor --config {{ receptor_config_dir }}/receptor.conf
-StandardOutput=append:{{ receptor_log_dir }}/receptor.log
+StandardOutput=append:{{ receptor_log_dir }}/{{ receptor_service_name }}.log
 Restart=on-failure
 
 [Install]
