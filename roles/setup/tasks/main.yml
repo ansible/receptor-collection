@@ -1,4 +1,6 @@
 ---
+- include_tasks: preflight.yml
+
 # Variable configuration.
 - include_tasks: variables.yml
 
@@ -11,9 +13,6 @@
 
 - include_tasks: "setup-release.yml"
   when: receptor_install_method == 'release'
-
-- include_tasks: "setup-service.yml"
-  when: receptor_install_method in ['release', 'local']
 
 - name: Check if receptor was installed correctly
   ansible.builtin.command: "receptor --version"
@@ -28,6 +27,19 @@
     fail_msg: "Receptor not installed correctly. Please check the installation or reinstall it with local_receptor: true"
     success_msg: "Receptor installed correctly"
 
+- name: Install receptorctl
+  block:
+    - name: Install receptorctl via pip
+      ansible.builtin.pip:
+        name: receptorctl
+
+    - name: Symlink receptorctl to /usr/bin
+      ansible.builtin.file:
+        state: link
+        src: /usr/local/bin/receptorctl
+        dest: /usr/bin/receptorctl
+  when: receptor_install_method != 'package'
+
 - include_tasks: configure.yml
 
 - include_tasks: tls.yml
@@ -38,9 +50,13 @@
 
 - include_tasks: generate_config.yml
 
+- include_tasks: "setup-service.yml"
+  when: receptor_install_method in ['release', 'local']
+
 - name: Start Receptor service
   ansible.builtin.systemd:
     name: "{{ receptor_service_name }}"
-    state: restarted
+    state: started
     daemon_reload: true
     enabled: true
+  register: _started

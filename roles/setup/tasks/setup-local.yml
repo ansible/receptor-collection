@@ -3,7 +3,7 @@
   delegate_to: localhost
   become: false
   ansible.builtin.stat:
-    path: "{{ local_receptor_bin_file }}"
+    path: "{{ receptor_local_bin_file }}"
   register: bin
 
 - name: Assert binary is file
@@ -14,8 +14,10 @@
 
 - name: Copy receptor's build to "{{ receptor_install_dir }}"
   ansible.builtin.copy:
-    src: "{{ local_receptor_bin_file }}"
+    src: "{{ receptor_local_bin_file }}"
     dest: "{{ receptor_install_dir }}/receptor"
     owner: root
     group: root
     mode: 'u=rwx,go=rx'
+  notify:
+    - Restart Receptor

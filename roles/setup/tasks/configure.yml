@@ -22,7 +22,8 @@
     mode: '0644'
     owner: root
     group: root
-#  notify: Restart Receptor
+  notify:
+    - Restart Receptor
 
 - name: Configure the receptor socket directory
   ansible.builtin.file:

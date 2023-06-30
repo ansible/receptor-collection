@@ -1,0 +1,5 @@
+---
+- name: Preflight - Check local binary file is set
+  ansible.builtin.assert:
+    that: receptor_local_bin_file | length
+  when: receptor_install_method == 'local'

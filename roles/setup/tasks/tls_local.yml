@@ -46,15 +46,16 @@
   changed_when: false
 
 - name: Upload TLS files
-  become: true
-  # become_user: "{{ receptor_user }}"
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
     mode: '0640'
+    force: "{{ receptor_replace_tls }}"
   with_items:
     - { src: '{{ custom_tls_certfile }}', dest: '{{ receptor_tls_certfile }}' }
     - { src: '{{ custom_tls_keyfile }}', dest: '{{ receptor_tls_keyfile }}' }
     - { src: '{{ custom_ca_certfile }}', dest: '{{ receptor_ca_certfile }}' }
+  notify:
+    - Restart Receptor

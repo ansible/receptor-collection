@@ -1,0 +1,15 @@
+---
+- name: Restart Receptor
+  ansible.builtin.systemd:
+    name: receptor
+    state: restarted
+    enabled: true
+  register: _restart
+  when: not _started.changed # don't restart if we recently started
+
+- name: Reload Receptor
+  ansible.builtin.command: receptorctl --socket {{ receptor_socket_dir }}/{{ receptor_control_filename }} reload
+  register: _reload
+  ignore_errors: true
+  failed_when: _reload.rc != 0 or _reload.stdout.startswith("Error:")
+  when: _restart is not defined

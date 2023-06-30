@@ -4,6 +4,8 @@
     name: "{{ receptor_packages }}"
     state: present
   when: receptor_install_method == 'package'
+  notify:
+    - Restart Receptor
 
 - name: Install dependencies specific to the node type
   ansible.builtin.dnf:
