@@ -1,3 +1,6 @@
+additional_system_packages:
+  - python39-pip
+pip_executable: pip3.9
 receptor_packages:
   - receptor
   - receptorctl

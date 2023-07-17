@@ -7,24 +7,6 @@
     owner: root
     group: root
 
-- name: Ensure systemd override directory exists
-  ansible.builtin.file:
-    dest: /etc/systemd/system/receptor.service.d
-    state: directory
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: Override receptor's systemd service runuser
-  ansible.builtin.template:
-    src: templates/systemd_receptor_override.conf.j2
-    dest: /etc/systemd/system/receptor.service.d/override.conf
-    mode: '0644'
-    owner: root
-    group: root
-  notify:
-    - Restart Receptor
-
 - name: Configure the receptor socket directory
   ansible.builtin.file:
     path: "{{ receptor_socket_dir }}"

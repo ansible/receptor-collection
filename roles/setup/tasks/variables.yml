@@ -1,10 +1,11 @@
 ---
-- name: Include OS-specific variables "{{ ansible_os_family }}"
-  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
-  when:
-    - ansible_os_family in ['RedHat', 'Debian']
-
-- name: Define receptor_packages
-  ansible.builtin.set_fact:
-    receptor_packages: "{{ __receptor_packages | list }}"
-  when: receptor_packages is not defined
+- name: Import distribution-specific variables
+  ansible.builtin.include_vars:
+    file: "{{ item }}"
+  with_first_found:
+    - files:
+        - '{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml'
+        - '{{ ansible_os_family }}.yml'
+      paths:
+        - 'vars'
+      skip: true
