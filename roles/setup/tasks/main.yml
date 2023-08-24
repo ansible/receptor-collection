@@ -8,10 +8,12 @@
 - include_tasks: "setup-{{ ansible_os_family }}.yml"
   when: ansible_os_family in ['RedHat', 'Debian']
 
-- include_tasks: "setup-local.yml"
+- include_tasks: python_packages.yml
+
+- include_tasks: setup-local.yml
   when: receptor_install_method == 'local'
 
-- include_tasks: "setup-release.yml"
+- include_tasks: setup-release.yml
   when: receptor_install_method == 'release'
 
 - name: Check if receptor was installed correctly
@@ -27,19 +29,6 @@
     fail_msg: "Receptor not installed correctly. Please check the installation or reinstall it with local_receptor: true"
     success_msg: "Receptor installed correctly"
 
-- name: Install receptorctl
-  block:
-    - name: Install receptorctl via pip
-      ansible.builtin.pip:
-        name: receptorctl
-
-    - name: Symlink receptorctl to /usr/bin
-      ansible.builtin.file:
-        state: link
-        src: /usr/local/bin/receptorctl
-        dest: /usr/bin/receptorctl
-  when: receptor_install_method != 'package'
-
 - include_tasks: configure.yml
 
 - include_tasks: tls.yml
@@ -50,7 +39,7 @@
 
 - include_tasks: generate_config.yml
 
-- include_tasks: "setup-service.yml"
+- include_tasks: setup-service.yml
   when: receptor_install_method in ['release', 'local']
 
 - name: Start Receptor service

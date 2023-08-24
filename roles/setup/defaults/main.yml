@@ -47,9 +47,22 @@ receptor_github_repo: receptor
 receptor_log_dir: /var/log/receptor
 
 receptor_service_name: receptor
+
 arch_mapping:
   armv6l: armhf
   armv7l: armhf
   aarch64: arm64
   x86_64: amd64
   i386: i386
+
+additional_system_packages:
+  - python3-pip
+
+additional_python_packages: []
+
+pip_executable: pip3
+python_executable: python3
+
+minimum_python_version: 3.9
+
+receptor_packages: []

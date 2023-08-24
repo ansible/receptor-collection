@@ -1,4 +1,12 @@
 ---
+- name: Create receptor config dir
+  ansible.builtin.file:
+    path: "{{ receptor_config_dir }}"
+    state: directory
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
+    mode: '0750'
+
 - name: Deploy receptor config
   ansible.builtin.template:
     src: templates/receptor.conf.j2

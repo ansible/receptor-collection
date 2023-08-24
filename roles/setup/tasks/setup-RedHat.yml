@@ -3,11 +3,38 @@
   ansible.builtin.dnf:
     name: "{{ receptor_packages }}"
     state: present
-  when: receptor_install_method == 'package'
+  when:
+    - receptor_install_method == 'package'
+    - receptor_packages
   notify:
     - Restart Receptor
 
+# Installing receptor via a package manager already lays down
+# a systemd service file. Instead of replacing it with a new
+# systemd_receptor.service file, we can just use an overrides
+# file to tweak it.
+- name: Setup systemd overrides
+  block:
+    - name: Ensure systemd override directory exists
+      ansible.builtin.file:
+        dest: "{{ systemd_folder }}/receptor.service.d"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Override receptor's systemd service runuser
+      ansible.builtin.template:
+        src: templates/systemd_receptor_override.conf.j2
+        dest: "{{ systemd_folder }}/receptor.service.d/override.conf"
+        mode: '0644'
+        owner: root
+        group: root
+      notify:
+        - Restart Receptor
+  when: receptor_install_method == 'package'
+
 - name: Install dependencies specific to the node type
   ansible.builtin.dnf:
-    name: "{{ receptor_dependencies | default([]) }}"
+    name: "{{ additional_system_packages | default([]) }}"
     state: present

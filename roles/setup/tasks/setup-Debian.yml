@@ -1,5 +1,5 @@
 ---
 - name: Install dependencies specific to the node type
   ansible.builtin.apt:
-    name: "{{ receptor_dependencies | default([]) }}"
+    name: "{{ additional_system_packages | default([]) }}"
     state: present
