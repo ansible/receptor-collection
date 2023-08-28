@@ -1,6 +1,6 @@
 ---
 name: Release the ansible collection
-on:
+"on":
   release:
     types: [published]
 
