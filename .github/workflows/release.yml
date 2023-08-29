@@ -11,4 +11,4 @@ jobs:
       environment: release
     secrets:
       ah_token: ${{ secrets.AH_TOKEN }}
-      ansible_galaxy_api_key: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+      ansible_galaxy_api_key: ${{ secrets.ANSILBE_GALAXY_API_KEY }}
