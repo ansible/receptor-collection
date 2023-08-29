@@ -10,7 +10,6 @@
     - [4.2.1. Variables](#421-variables)
 - [5. License](#5-license)
 
-
 # 2. Description
 This collection prepare and configure endpoint to execute podmand and receptor.
 It's used by AWX into instance bundle for configure endpoint into AWX.
@@ -19,28 +18,21 @@ This collection contains 2 roles:
 - __Podman__ : that install and configure podman on the endpoint
 - __Setup__: that will install and configure receptor on the endpoint.
 
-<br>
-
 # 3. Environments Tested
 
-This ollection has been tested on following OS:
+This collection has been tested on the following distributions:
+
 | OS | Release | Tested (Y/N)  | Comment |
 | ---------- | ------- | ---------- | -------- |
 | Centos | >=8 | Y | |
 | Redhat | >=8 | Y | |
 | Ubuntu | >=20 | Y | |
 
-<br>
-
 # 4. Roles
-
-<br>
 
 ## 4.1. Podman
 
 Installs and configures Podman.
-
-<br>
 
 ### 4.1.1. Variables
 
@@ -51,8 +43,6 @@ Installs and configures Podman.
 | __default_runtime__  | string | `crun` | The default container runtime to use for Podman. |
 | __default_cgroup_manager__  | string | `cgroupfs` | The default cgroup manager to use for Podman. |
 
-<br>
-
 ## 4.2. Setup
 
 Installs and configures a Receptor node.
@@ -61,9 +51,6 @@ On Debian you can set `receptor_install_method` to `release` in that way we can 
 
 If you want to use your pre-build local package, you can set `receptor_install_method` to `local` and role will use it (based on other variables).
 In case of `receptor_install_method` is `local` or `release`, role will configure the receptor service in the same way of Centor/Redhat package.
-
-
-<br>
 
 ### 4.2.1. Variables
 
@@ -124,6 +111,3 @@ In case of `receptor_install_method` is `local` or `release`, role will configur
 # 5. License
 
 Apache 2
-
-<br>
-<br>
