@@ -1,0 +1,39 @@
+---
+
+name: CI
+
+'on':
+  pull_request:
+  push:
+  workflow_dispatch:
+
+jobs:
+  molecule:
+    name: molecule
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+
+      - name: Install Dependencies
+        run: |
+          pip install -r molecule/requirements.txt
+
+      - name: Run Molecule
+        env:
+          MOLECULE_VERBOSITY: 3
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+        run: |
+          molecule test
+
+  ansible-lint:
+    name: ansible-lint
+    runs-on: ubuntu-latest
+    steps:
+      # Important: This sets up your GITHUB_WORKSPACE environment variable
+      - uses: actions/checkout@v3
+
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@main

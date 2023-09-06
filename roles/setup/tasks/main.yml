@@ -1,25 +1,31 @@
 ---
-- include_tasks: preflight.yml
+- name: Run preflight
+  ansible.builtin.include_tasks: preflight.yml
 
 # Variable configuration.
-- include_tasks: variables.yml
+- name: Include variables
+  ansible.builtin.include_tasks: variables.yml
 
 # Setup/install tasks.
-- include_tasks: "setup-{{ ansible_os_family }}.yml"
+- name: Run OS-specific tasks
+  ansible.builtin.include_tasks: "setup-{{ ansible_os_family }}.yml"
   when: ansible_os_family in ['RedHat', 'Debian']
 
-- include_tasks: python_packages.yml
+- name: Install python packages
+  ansible.builtin.include_tasks: python_packages.yml
 
-- include_tasks: setup-local.yml
+- name: Receptor install local
+  ansible.builtin.include_tasks: setup-local.yml
   when: receptor_install_method == 'local'
 
-- include_tasks: setup-release.yml
+- name: Receptor install release
+  ansible.builtin.include_tasks: setup-release.yml
   when: receptor_install_method == 'release'
 
 - name: Check if receptor was installed correctly
   ansible.builtin.command: "receptor --version"
+  changed_when: false
   register: receptor_version
-  changed_when: receptor_version.rc == 0
   ignore_errors: true
 
 - name: Assert receptor installation
@@ -29,17 +35,22 @@
     fail_msg: "Receptor not installed correctly. Please check the installation or reinstall it with local_receptor: true"
     success_msg: "Receptor installed correctly"
 
-- include_tasks: configure.yml
+- name: Configure receptor socket
+  ansible.builtin.include_tasks: configure.yml
 
-- include_tasks: tls.yml
+- name: TLS files
+  ansible.builtin.include_tasks: tls.yml
   when: receptor_tls
 
-- include_tasks: worksign.yml
+- name: Work signing
+  ansible.builtin.include_tasks: worksign.yml
   when: receptor_sign or receptor_verify
 
-- include_tasks: generate_config.yml
+- name: Generate receptor config
+  ansible.builtin.include_tasks: generate_config.yml
 
-- include_tasks: setup-service.yml
+- name: Setup systemd
+  ansible.builtin.include_tasks: setup-service.yml
   when: receptor_install_method in ['release', 'local']
 
 - name: Start Receptor service

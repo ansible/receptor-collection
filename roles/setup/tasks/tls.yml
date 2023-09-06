@@ -11,7 +11,7 @@
     - "{{ receptor_tls_ca_dir }}"
 
 - name: Process provided TLS files
-  include_tasks: tls_local.yml
+  ansible.builtin.include_tasks: tls_local.yml
   when: custom_tls_certfile is defined or custom_tls_keyfile is defined
 
 - name: Set TLS file permissions

@@ -1,0 +1,17 @@
+---
+- name: Create
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Create the receptor user
+      ansible.builtin.user:
+        name: receptor
+        shell: /bin/bash
+
+    - name: Run podman role
+      ansible.builtin.import_role:
+        name: ansible.receptor.podman
+
+    - name: Run setup role
+      ansible.builtin.import_role:
+        name: ansible.receptor.setup
