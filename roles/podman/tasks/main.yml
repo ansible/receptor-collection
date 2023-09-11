@@ -1,19 +1,20 @@
 ---
 # Variable configuration.
-- include_tasks: variables.yml
+- name: Include variables
+  ansible.builtin.include_tasks: variables.yml
 
 # Setup/install tasks.
-- include_tasks: "setup-{{ ansible_os_family }}.yml"
+- name: Run OS-specific tasks
+  ansible.builtin.include_tasks: "setup-{{ ansible_os_family }}.yml"
   when: ansible_os_family in ['RedHat', 'Debian']
 
 - name: Create directory for podman runtime config
   ansible.builtin.file:
     path: "~{{ podman_user }}/.config/containers"
     state: directory
-    mode: 0700
+    mode: '0700'
     owner: "{{ podman_user }}"
     group: "{{ podman_group }}"
-    recurse: true
 
 - name: Configure podman default runtime
   ansible.builtin.copy:
@@ -24,7 +25,7 @@
     dest: "~{{ podman_user }}/.config/containers/containers.conf"
     owner: "{{ podman_user }}"
     group: "{{ podman_group }}"
-    mode: 0600
+    mode: '0600'
 
 - name: Create empty mounts config file to avoid permissions error message
   ansible.builtin.copy:
@@ -33,7 +34,7 @@
     force: false
     owner: "{{ podman_user }}"
     group: "{{ podman_group }}"
-    mode: 0600
+    mode: '0600'
 
 - name: Create storage.conf to defer fuse-overlayfs on rootless env
   ansible.builtin.copy:
@@ -46,18 +47,17 @@
     force: true
     owner: "{{ podman_user }}"
     group: "{{ podman_group }}"
-    mode: 0600
+    mode: '0600'
 
 - name: Ensure registries.conf.d exists
   ansible.builtin.file:
     path: /etc/containers/registries.conf.d/
     state: directory
-    recurse: true
-    mode: 0755
+    mode: '0755'
 
 - name: Force fully qualified image names to be provided to podman pull
   ansible.builtin.copy:
     content: |
       unqualified-search-registries = []
     dest: /etc/containers/registries.conf.d/force-fully-qualified-images.conf
-    mode: 0644
+    mode: '0644'

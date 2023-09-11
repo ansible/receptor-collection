@@ -28,7 +28,7 @@ This collection has been tested on the following distributions:
 | ---------- | ------- | ---------- |
 | Centos | >=8 | Y |
 | Redhat | >=8 | Y |
-| Ubuntu | >=20 | Y |
+| Debian | >=11 | Y |
 
 # 4. Roles
 

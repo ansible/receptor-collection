@@ -1,3 +1,4 @@
 ---
-- include_tasks: worksign_local.yml
+- name: Work signing local
+  ansible.builtin.include_tasks: worksign_local.yml
   when: custom_worksign_private_keyfile is defined or custom_worksign_public_keyfile is defined

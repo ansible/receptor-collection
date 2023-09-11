@@ -1,0 +1,44 @@
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: podman
+platforms:
+  - name: molecule-centos
+    image: quay.io/centos/centos:stream8
+    pre_build_image: true
+    systemd: true
+    privileged: true
+    command: "/usr/sbin/init"
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  - name: molecule-debian
+    image: debian:11
+    dockerfile: Containerfile.j2
+    pre_build_image: false
+    systemd: true
+    privileged: true
+    command: "/lib/systemd/systemd"
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      molecule-centos:
+        podman_user: receptor
+        podman_group: receptor
+        ansible_connection: containers.podman.podman
+      molecule-debian:
+        ansible_connection: containers.podman.podman
+        podman_user: receptor
+        podman_group: receptor
