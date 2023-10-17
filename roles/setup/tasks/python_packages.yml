@@ -1,3 +1,9 @@
+- name: Install pip package
+  ansible.builtin.package:
+    name: "{{ system_pip_package }}"
+  when:
+    - system_pip_package | default('') != ''
+
 - name: Get the python version
   ansible.builtin.command: >
     {{ python_executable }} -c 'import sys; print(sys.version.split()[0])'
