@@ -15,13 +15,6 @@
     msg: "Python version {{ minimum_python_version }} or greater is required, you have {{ python_version.stdout }}"
   when: python_version.stdout is version(minimum_python_version, '<')
 
-- name: Append receptorctl to python packages
-  ansible.builtin.set_fact:
-    additional_python_packages: "{{ additional_python_packages + ['receptorctl'] }}"
-  when:
-    - receptor_install_method in ['release', 'local']
-    - "'receptorctl' not in additional_python_packages"
-
 - name: Install additional python packages
   ansible.builtin.pip:
     name: "{{ additional_python_packages | default([]) }}"
