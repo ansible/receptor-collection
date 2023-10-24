@@ -55,10 +55,11 @@ arch_mapping:
   x86_64: amd64
   i386: i386
 
-additional_system_packages:
-  - python3-pip
+additional_system_packages: []
 
 additional_python_packages: []
+
+system_pip_package: python3-pip
 
 pip_executable: pip3
 python_executable: python3
