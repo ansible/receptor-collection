@@ -13,6 +13,8 @@
 
 - name: Install python packages
   ansible.builtin.include_tasks: python_packages.yml
+  when:
+    - receptor_install_method != 'package'
 
 - name: Receptor install local
   ansible.builtin.include_tasks: setup-local.yml
