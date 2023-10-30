@@ -1,3 +1,9 @@
+- name: Install pip package
+  ansible.builtin.package:
+    name: "{{ system_pip_package }}"
+  when:
+    - system_pip_package | default('') != ''
+
 - name: Get the python version
   ansible.builtin.command: >
     {{ python_executable }} -c 'import sys; print(sys.version.split()[0])'
@@ -8,13 +14,6 @@
   ansible.builtin.fail:
     msg: "Python version {{ minimum_python_version }} or greater is required, you have {{ python_version.stdout }}"
   when: python_version.stdout is version(minimum_python_version, '<')
-
-- name: Append receptorctl to python packages
-  ansible.builtin.set_fact:
-    additional_python_packages: "{{ additional_python_packages + ['receptorctl'] }}"
-  when:
-    - receptor_install_method in ['release', 'local']
-    - "'receptorctl' not in additional_python_packages"
 
 - name: Install additional python packages
   ansible.builtin.pip:
