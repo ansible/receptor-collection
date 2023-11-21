@@ -11,37 +11,39 @@
   ansible.builtin.include_tasks: "setup-{{ ansible_os_family }}.yml"
   when: ansible_os_family in ['RedHat', 'Debian']
 
-- name: Append receptorctl to python packages if needed
-  ansible.builtin.set_fact:
-    additional_python_packages: "{{ additional_python_packages + ['receptorctl'] }}"
-  when:
-    - receptor_install_method in ['release', 'local']
-    - "'receptorctl' not in additional_python_packages"
+- name: Ensure receptor is installed correctly in non-containerized flows
+  when: receptor_install_method != 'container'
+  block:
+    - name: Append receptorctl to python packages if needed
+      ansible.builtin.set_fact:
+        additional_python_packages: "{{ additional_python_packages + ['receptorctl'] }}"
+      when:
+        - receptor_install_method in ['release', 'local']
+        - "'receptorctl' not in additional_python_packages"
+    - name: Install python packages
+      ansible.builtin.include_tasks: python_packages.yml
+      when: additional_python_packages | length > 0
 
-- name: Install python packages
-  ansible.builtin.include_tasks: python_packages.yml
-  when: additional_python_packages | length > 0
+    - name: Receptor install local
+      ansible.builtin.include_tasks: setup-local.yml
+      when: receptor_install_method == 'local'
 
-- name: Receptor install local
-  ansible.builtin.include_tasks: setup-local.yml
-  when: receptor_install_method == 'local'
+    - name: Receptor install release
+      ansible.builtin.include_tasks: setup-release.yml
+      when: receptor_install_method == 'release'
 
-- name: Receptor install release
-  ansible.builtin.include_tasks: setup-release.yml
-  when: receptor_install_method == 'release'
+    - name: Check if receptor was installed correctly
+      ansible.builtin.command: "receptor --version"
+      changed_when: false
+      register: receptor_version
+      ignore_errors: true
 
-- name: Check if receptor was installed correctly
-  ansible.builtin.command: "receptor --version"
-  changed_when: false
-  register: receptor_version
-  ignore_errors: true
-
-- name: Assert receptor installation
-  ansible.builtin.assert:
-    that:
-      - receptor_version.rc == 0
-    fail_msg: "Receptor not installed correctly. Please check the installation or reinstall it with local_receptor: true"
-    success_msg: "Receptor installed correctly"
+    - name: Assert receptor installation
+      ansible.builtin.assert:
+        that:
+          - receptor_version.rc == 0
+        fail_msg: "Receptor not installed correctly. Please check the installation or reinstall it with local_receptor: true"
+        success_msg: "Receptor installed correctly"
 
 - name: Configure receptor socket
   ansible.builtin.include_tasks: configure.yml
@@ -57,9 +59,12 @@
 - name: Generate receptor config
   ansible.builtin.include_tasks: generate_config.yml
 
+- name: Receptor install container
+  ansible.builtin.include_tasks: setup-container.yml
+  when: receptor_install_method == 'container'
+
 - name: Setup systemd
   ansible.builtin.include_tasks: setup-service.yml
-  when: receptor_install_method in ['release', 'local']
 
 - name: Start Receptor service
   ansible.builtin.systemd:
