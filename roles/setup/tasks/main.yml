@@ -11,19 +11,20 @@
   ansible.builtin.include_tasks: "setup-{{ ansible_os_family }}.yml"
   when: ansible_os_family in ['RedHat', 'Debian']
 
+- name: Append receptorctl to python packages if needed
+  ansible.builtin.set_fact:
+    additional_python_packages: "{{ additional_python_packages + ['receptorctl'] }}"
+  when:
+    - receptor_install_method in ['release', 'local']
+    - "'receptorctl' not in additional_python_packages"
+
+- name: Install python packages
+  ansible.builtin.include_tasks: python_packages.yml
+  when: additional_python_packages | length > 0
+
 - name: Ensure receptor is installed correctly in non-containerized flows
   when: receptor_install_method != 'container'
   block:
-    - name: Append receptorctl to python packages if needed
-      ansible.builtin.set_fact:
-        additional_python_packages: "{{ additional_python_packages + ['receptorctl'] }}"
-      when:
-        - receptor_install_method in ['release', 'local']
-        - "'receptorctl' not in additional_python_packages"
-    - name: Install python packages
-      ansible.builtin.include_tasks: python_packages.yml
-      when: additional_python_packages | length > 0
-
     - name: Receptor install local
       ansible.builtin.include_tasks: setup-local.yml
       when: receptor_install_method == 'local'

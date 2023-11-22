@@ -1,18 +1,30 @@
 ---
-- name: Pull the latest relase of receptor from Quay
-  containers.podman.podman_image:
-    name: quay.io/ansible/receptor
-    tag: latest
-    state: present
+- name: Setup container
+  become: true
+  become_user: "{{ receptor_user }}"
+  block:
+    - name: Pull the latest relase of receptor from Quay
+      containers.podman.podman_image:
+        name: quay.io/ansible/receptor
+        tag: latest
+        state: present
 
-- name: Run receptor image
-  containers.podman.podman_container:
-    name: receptor
-    image: quay.io/ansible/receptor
-    state: started
-    volume:
-      - "{{ receptor_config_dir }}/receptor.conf:/etc/receptor/receptor.conf:Z"
-    generate_systemd:
-      container_prefix: ''
-      path: /etc/systemd/system
-      separator: ''
+    - name: Run receptor image
+      containers.podman.podman_container:
+        name: receptor
+        image: quay.io/ansible/receptor
+        state: started
+        network: host
+        pid: private
+        pids_limit: 0
+        volume:
+          - "{{ receptor_config_dir }}/receptor.conf:{{ receptor_config_dir }}/receptor.conf:Z"
+          - "{{ receptor_worksign_public_keyfile }}:{{ receptor_worksign_public_keyfile }}:Z"
+          - "{{ receptor_tls_certfile }}:{{ receptor_tls_certfile }}:Z"
+          - "{{ receptor_tls_keyfile }}:{{ receptor_tls_keyfile }}:Z"
+          - "{{ receptor_ca_certfile }}:{{ receptor_ca_certfile }}:Z"
+          - "{{ receptor_socket_dir }}:{{ receptor_socket_dir }}:Z"
+        generate_systemd:
+          container_prefix: ''
+          path: /etc/systemd/system
+          separator: ''
