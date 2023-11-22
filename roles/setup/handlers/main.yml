@@ -5,7 +5,9 @@
     state: restarted
     enabled: true
   register: _restart
-  when: not _started.changed # don't restart if we recently started
+  when:
+    - not _started.changed # don't restart if we recently started
+    - receptor_install_method != 'container'
 
 - name: Reload Receptor
   ansible.builtin.command: receptorctl --socket {{ receptor_socket_dir }}/{{ receptor_control_filename }} reload
