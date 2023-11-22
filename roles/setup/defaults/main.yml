@@ -67,3 +67,5 @@ python_executable: python3
 minimum_python_version: 3.9
 
 receptor_packages: []
+
+receptor_image_name: quay.io/ansible/receptor

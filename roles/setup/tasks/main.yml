@@ -66,8 +66,10 @@
 
 - name: Setup systemd
   ansible.builtin.include_tasks: setup-service.yml
+  when: receptor_install_method != 'container'
 
 - name: Start Receptor service
+  when: receptor_install_method != 'container'
   ansible.builtin.systemd:
     name: "{{ receptor_service_name }}"
     state: started

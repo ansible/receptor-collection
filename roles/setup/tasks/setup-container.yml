@@ -1,19 +1,33 @@
 ---
+- name: Enable linger for {{ receptor_user }}
+  become: true
+  ansible.builtin.command:
+    cmd: "loginctl enable-linger {{ receptor_user }}"
+  changed_when: false
+
+- name: Get UID of {{ receptor_user }}
+  ansible.builtin.command:
+    cmd: "id -u {{ receptor_user }}"
+  register: receptor_uid
+  changed_when: false
+
 - name: Setup container
   become: true
   become_user: "{{ receptor_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ receptor_uid.stdout }}"
   block:
-    - name: Pull the latest relase of receptor from Quay
+    - name: Pull the latest release of receptor from Quay
       containers.podman.podman_image:
-        name: quay.io/ansible/receptor
+        name: "{{ receptor_image_name }}"
         tag: latest
         state: present
 
     - name: Run receptor image
       containers.podman.podman_container:
-        name: receptor
-        image: quay.io/ansible/receptor
-        state: started
+        name: "{{ receptor_service_name }}"
+        image: "{{ receptor_image_name }}"
+        state: created
         network: host
         pid: private
         pids_limit: 0
@@ -26,5 +40,13 @@
           - "{{ receptor_socket_dir }}:{{ receptor_socket_dir }}:Z"
         generate_systemd:
           container_prefix: ''
-          path: /etc/systemd/system
+          path: ~/.config/systemd/user/
           separator: ''
+
+    - name: Ensure receptor service is started
+      ansible.builtin.systemd_service:
+        name: '{{ receptor_service_name }}'
+        state: started
+        enabled: true
+        scope: user
+        daemon_reload: true
