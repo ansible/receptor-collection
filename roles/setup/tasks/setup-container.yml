@@ -16,21 +16,34 @@
   become_user: "{{ receptor_user }}"
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ receptor_uid.stdout }}"
+  vars:
+    receptor_uid_directory:  "/run/user/{{ receptor_uid.stdout }}"
   block:
+    - name: Enable podman socket
+      ansible.builtin.systemd:
+        name: podman.socket
+        state: started
+        enabled: true
+        scope: user
+
     - name: Pull the latest release of receptor from Quay
       containers.podman.podman_image:
         name: "{{ receptor_image_name }}"
-        tag: latest
+        tag: "{{ receptor_image_tag }}"
         state: present
 
     - name: Run receptor image
       containers.podman.podman_container:
         name: "{{ receptor_service_name }}"
-        image: "{{ receptor_image_name }}"
+        image: "{{ receptor_image_name }}:{{ receptor_image_tag }}"
         state: created
         network: host
         pid: private
         pids_limit: 0
+        cap_drop:
+          - CAP_AUDIT_WRITE
+          - CAP_MKNOD
+        user: root
         volume:
           - "{{ receptor_config_dir }}/receptor.conf:{{ receptor_config_dir }}/receptor.conf:Z"
           - "{{ receptor_worksign_public_keyfile }}:{{ receptor_worksign_public_keyfile }}:Z"
@@ -38,6 +51,13 @@
           - "{{ receptor_tls_keyfile }}:{{ receptor_tls_keyfile }}:Z"
           - "{{ receptor_ca_certfile }}:{{ receptor_ca_certfile }}:Z"
           - "{{ receptor_socket_dir }}:{{ receptor_socket_dir }}:Z"
+          - "{{ receptor_uid_directory }}/podman/podman.sock:/run/podman/podman.sock:z"
+        privileged: true
+        security_opt:
+          - 'label=disable'
+        env:
+          RECEPTORCTL_SOCKET: '{{ receptor_socket_dir }}/{{ receptor_control_filename }}'
+        command: 'receptor --config {{ receptor_config_dir }}/receptor.conf'
         generate_systemd:
           container_prefix: ''
           path: ~/.config/systemd/user/

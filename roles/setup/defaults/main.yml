@@ -68,4 +68,6 @@ minimum_python_version: 3.9
 
 receptor_packages: []
 
-receptor_image_name: quay.io/ansible/receptor
+# Todo: Replace with non-dev ee image once available
+receptor_image_name: quay.io/haoliu/awx-ee
+receptor_image_tag: podman-remote
