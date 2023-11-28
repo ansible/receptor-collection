@@ -65,7 +65,7 @@
 
 - name: Setup systemd
   ansible.builtin.include_tasks: setup-service.yml
-  when: receptor_install_method in ['release', 'local', 'package']
+  when: receptor_install_method in ['release', 'local']
 
 - name: Start Receptor service
   when: receptor_install_method in ['release', 'local', 'package']

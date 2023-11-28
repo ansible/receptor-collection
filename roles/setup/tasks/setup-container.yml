@@ -17,7 +17,7 @@
   environment:
     XDG_RUNTIME_DIR: "/run/user/{{ receptor_uid.stdout }}"
   vars:
-    receptor_uid_directory:  "/run/user/{{ receptor_uid.stdout }}"
+    receptor_uid_directory: "/run/user/{{ receptor_uid.stdout }}"
   block:
     - name: Enable podman socket
       ansible.builtin.systemd:
