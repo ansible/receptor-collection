@@ -45,12 +45,12 @@
           - CAP_MKNOD
         user: root
         volume:
-          - "{{ receptor_config_dir }}/receptor.conf:{{ receptor_config_dir }}/receptor.conf:Z"
-          - "{{ receptor_worksign_public_keyfile }}:{{ receptor_worksign_public_keyfile }}:Z"
-          - "{{ receptor_tls_certfile }}:{{ receptor_tls_certfile }}:Z"
-          - "{{ receptor_tls_keyfile }}:{{ receptor_tls_keyfile }}:Z"
-          - "{{ receptor_ca_certfile }}:{{ receptor_ca_certfile }}:Z"
-          - "{{ receptor_socket_dir }}:{{ receptor_socket_dir }}:Z"
+          - "{{ receptor_config_dir }}/receptor.conf:{{ receptor_config_dir }}/receptor.conf:ro"
+          - "{{ receptor_worksign_public_keyfile }}:{{ receptor_worksign_public_keyfile }}:ro"
+          - "{{ receptor_tls_certfile }}:{{ receptor_tls_certfile }}:ro"
+          - "{{ receptor_tls_keyfile }}:{{ receptor_tls_keyfile }}:ro"
+          - "{{ receptor_ca_certfile }}:{{ receptor_ca_certfile }}:ro"
+          - "{{ receptor_socket_dir }}:{{ receptor_socket_dir }}:z"
           - "{{ receptor_uid_directory }}/podman/podman.sock:/run/podman/podman.sock:z"
         privileged: true
         security_opt:
@@ -70,3 +70,15 @@
         enabled: true
         scope: user
         daemon_reload: true
+
+- name: Add 'receptorctl' alias
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.lineinfile:
+    path: ~/.bashrc
+    line: 'alias receptorctl="sudo su - awx -c \"podman exec receptor bash -c \"receptor\"\""'
+    regexp: '^alias receptorctl="sudo su - awx -c \"podman exec receptor bash -c \"receptor\"\""$'
+    state: present
+    insertafter: EOF
+    create: true
+    mode: '0644'
