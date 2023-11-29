@@ -71,3 +71,5 @@ receptor_packages: []
 # Todo: Replace with non-dev ee image once available
 receptor_image_name: quay.io/haoliu/awx-ee
 receptor_image_tag: podman-remote
+receptor_image_authfile: ''
+awx_isolation_base_path: /tmp

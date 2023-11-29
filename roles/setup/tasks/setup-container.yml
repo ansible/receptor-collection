@@ -5,19 +5,21 @@
     cmd: "loginctl enable-linger {{ receptor_user }}"
   changed_when: false
 
-- name: Get UID of {{ receptor_user }}
-  ansible.builtin.command:
-    cmd: "id -u {{ receptor_user }}"
-  register: receptor_uid
-  changed_when: false
+- name: Gather user info
+  ansible.builtin.user:
+    name: "{{ receptor_user }}"
+    state: present
+    groups:
+      - systemd-journal # Necessary to allow receptor_user to read journald logs
+  register: receptor_user_register
 
-- name: Setup container
+- name: Setup Receptor container
   become: true
   become_user: "{{ receptor_user }}"
   environment:
-    XDG_RUNTIME_DIR: "/run/user/{{ receptor_uid.stdout }}"
+    XDG_RUNTIME_DIR: "/run/user/{{ receptor_user_register.uid }}"
   vars:
-    receptor_uid_directory: "/run/user/{{ receptor_uid.stdout }}"
+    receptor_uid_directory: "/run/user/{{ receptor_user_register.uid }}"
   block:
     - name: Enable podman socket
       ansible.builtin.systemd:
@@ -26,10 +28,11 @@
         enabled: true
         scope: user
 
-    - name: Pull the latest release of receptor from Quay
+    - name: Pull the latest release of receptor
       containers.podman.podman_image:
         name: "{{ receptor_image_name }}"
         tag: "{{ receptor_image_tag }}"
+        auth_file: "{{ lookup('ansible.builtin.file', receptor_image_authfile, errors='ignore') }}"
         state: present
 
     - name: Run receptor image
@@ -52,6 +55,7 @@
           - "{{ receptor_ca_certfile }}:{{ receptor_ca_certfile }}:ro"
           - "{{ receptor_socket_dir }}:{{ receptor_socket_dir }}:z"
           - "{{ receptor_uid_directory }}/podman/podman.sock:/run/podman/podman.sock:z"
+          - "{{ awx_isolation_base_path }}:{{ awx_isolation_base_path }}"
         privileged: true
         security_opt:
           - 'label=disable'
@@ -63,7 +67,7 @@
           path: ~/.config/systemd/user/
           separator: ''
 
-    - name: Ensure receptor service is started
+    - name: Start systemd user service
       ansible.builtin.systemd_service:
         name: '{{ receptor_service_name }}'
         state: started
@@ -71,14 +75,10 @@
         scope: user
         daemon_reload: true
 
-- name: Add 'receptorctl' alias
-  become: true
-  become_user: "{{ ansible_user }}"
-  ansible.builtin.lineinfile:
-    path: ~/.bashrc
-    line: 'alias receptorctl="sudo su - awx -c \"podman exec receptor bash -c \"receptor\"\""'
-    regexp: '^alias receptorctl="sudo su - awx -c \"podman exec receptor bash -c \"receptor\"\""$'
-    state: present
-    insertafter: EOF
-    create: true
-    mode: '0644'
+- name: Add receptor script
+  ansible.builtin.template:
+    src: templates/containerized_receptor_alias.sh.j2
+    dest: /usr/bin/receptor
+    mode: '0777'
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"
