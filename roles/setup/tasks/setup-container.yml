@@ -79,6 +79,6 @@
   ansible.builtin.template:
     src: templates/containerized_receptor_alias.sh.j2
     dest: /usr/bin/receptor
-    mode: '0777'
+    mode: '0750'
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
