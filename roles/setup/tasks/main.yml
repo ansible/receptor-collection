@@ -15,7 +15,7 @@
   ansible.builtin.set_fact:
     additional_python_packages: "{{ additional_python_packages + ['receptorctl'] }}"
   when:
-    - receptor_install_method in ['release', 'local']
+    - receptor_install_method in ['release', 'local', 'container']
     - "'receptorctl' not in additional_python_packages"
 
 - name: Install python packages
