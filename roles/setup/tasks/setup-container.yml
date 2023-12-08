@@ -39,7 +39,8 @@
       containers.podman.podman_container:
         name: "{{ receptor_service_name }}"
         image: "{{ receptor_image_name }}:{{ receptor_image_tag }}"
-        state: created
+        recreate: true
+        state: present
         network: host
         pid: private
         pids_limit: 0
