@@ -57,7 +57,7 @@ The setup role will do the following,
   - By default, Receptor is obtained via the pre-built binary on the Receptor Github release page.
   - For Centos/Redhat/Fedora systems, Receptor can be installed via the `dnf` package manager.
   - It is also possible to upload a custom Receptor binary from the local filesystem to the node.
-  - It is also possible to install receptor via [container image](https://quay.io/repository/ansible/receptor?tab=tags&tag=latest).
+  - It is also possible to install receptor via [container image](https://quay.io/repository/ansible/awx-ee?tab=tags&tag=latest).
 - Configure a systemd service to run whichever Receptor binary was obtained.
   - This service should start automatically on system startup.
 - Generate a Receptor configuration file.
