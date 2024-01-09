@@ -1,0 +1,85 @@
+---
+- name: Enable linger for {{ receptor_user }}
+  become: true
+  ansible.builtin.command:
+    cmd: "loginctl enable-linger {{ receptor_user }}"
+  changed_when: false
+
+- name: Gather user info
+  ansible.builtin.user:
+    name: "{{ receptor_user }}"
+    state: present
+    groups:
+      - systemd-journal # Necessary to allow receptor_user to read journald logs
+  register: receptor_user_register
+
+- name: Setup Receptor container
+  become: true
+  become_user: "{{ receptor_user }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ receptor_user_register.uid }}"
+  vars:
+    receptor_uid_directory: "/run/user/{{ receptor_user_register.uid }}"
+  block:
+    - name: Enable podman socket
+      ansible.builtin.systemd:
+        name: podman.socket
+        state: started
+        enabled: true
+        scope: user
+
+    - name: Pull the latest release of receptor
+      containers.podman.podman_image:
+        name: "{{ receptor_image_name }}"
+        tag: "{{ receptor_image_tag }}"
+        auth_file: "{{ lookup('ansible.builtin.file', receptor_image_authfile, errors='ignore') }}"
+        state: present
+
+    - name: Run receptor image
+      containers.podman.podman_container:
+        name: "{{ receptor_service_name }}"
+        image: "{{ receptor_image_name }}:{{ receptor_image_tag }}"
+        recreate: true
+        state: present
+        network: host
+        pid: private
+        pids_limit: 0
+        cap_drop:
+          - CAP_AUDIT_WRITE
+          - CAP_MKNOD
+        user: root
+        volume:
+          - "{{ receptor_config_dir }}/receptor.conf:{{ receptor_config_dir }}/receptor.conf:ro"
+          - "{{ receptor_worksign_public_keyfile }}:{{ receptor_worksign_public_keyfile }}:ro"
+          - "{{ receptor_tls_certfile }}:{{ receptor_tls_certfile }}:ro"
+          - "{{ receptor_tls_keyfile }}:{{ receptor_tls_keyfile }}:ro"
+          - "{{ receptor_ca_certfile }}:{{ receptor_ca_certfile }}:ro"
+          - "{{ receptor_socket_dir }}:{{ receptor_socket_dir }}:z"
+          - "{{ receptor_uid_directory }}/podman/podman.sock:/run/podman/podman.sock:z"
+          - "{{ awx_isolation_base_path }}:{{ awx_isolation_base_path }}"
+        privileged: true
+        security_opt:
+          - 'label=disable'
+        env:
+          RECEPTORCTL_SOCKET: '{{ receptor_socket_dir }}/{{ receptor_control_filename }}'
+        command: 'receptor --config {{ receptor_config_dir }}/receptor.conf'
+        generate_systemd:
+          container_prefix: ''
+          path: ~/.config/systemd/user/
+          separator: ''
+
+    - name: Start systemd user service
+      ansible.builtin.systemd_service:
+        name: '{{ receptor_service_name }}'
+        state: started
+        enabled: true
+        scope: user
+        daemon_reload: true
+
+- name: Add receptor script
+  ansible.builtin.template:
+    src: templates/containerized_receptorctl_alias.sh.j2
+    dest: /usr/bin/receptorctl
+    mode: '0750'
+    owner: "{{ receptor_user }}"
+    group: "{{ receptor_group }}"

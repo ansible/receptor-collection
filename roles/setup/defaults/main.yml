@@ -37,7 +37,7 @@ receptor_log_level: 'info'
 _hostname: "{{ routable_hostname | default(ansible_host) }}"
 receptor_host_identifier: "{{ (_hostname == 'localhost') | ternary('localhost.localdomain', _hostname) }}"
 
-receptor_install_method: release # options: release, package, local
+receptor_install_method: release # options: release, package, local, container
 receptor_local_bin_file: ''
 receptor_install_dir: '/usr/bin'
 
@@ -67,3 +67,8 @@ python_executable: python3
 minimum_python_version: 3.9
 
 receptor_packages: []
+
+receptor_image_name: quay.io/ansible/awx-ee
+receptor_image_tag: latest
+receptor_image_authfile: ''
+awx_isolation_base_path: /tmp
