@@ -54,7 +54,11 @@
 {% if receptor_peers | default([]) %}
 {% for peer in receptor_peers %}
 - {{ peer['protocol'] }}-peer:
+{% if 'port' in peer %}
     address: {{ peer['address'] | default(peer['host']) }}:{{ peer['port'] }}
+{% else %}
+    address: {{ peer['address'] }}
+{% endif %}
     redial: true
 {% if receptor_tls %}
     tls: tls_client
