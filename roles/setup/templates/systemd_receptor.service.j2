@@ -4,6 +4,8 @@ After=network.target
 StartLimitIntervalSec=0
 
 [Service]
+User={{ receptor_user }}
+Group={{ receptor_group }}
 ExecStart={{ receptor_install_dir }}/receptor --config {{ receptor_config_dir }}/receptor.conf
 StandardOutput=append:{{ receptor_log_dir }}/{{ receptor_service_name }}.log
 Restart=on-failure
