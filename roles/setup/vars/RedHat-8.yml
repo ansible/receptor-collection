@@ -1,6 +1,6 @@
-system_pip_package: python39-pip
-python_executable: python3.9
-pip_executable: pip3.9
+system_pip_package: python311-pip
+python_executable: python3.11
+pip_executable: pip3.11
 receptor_packages:
   - receptor
   - receptorctl
