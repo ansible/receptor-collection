@@ -5,4 +5,3 @@ receptor_packages:
   - receptor
   - receptorctl
 systemd_folder: "/usr/lib/systemd/system"
-minimum_python_version: 3.9

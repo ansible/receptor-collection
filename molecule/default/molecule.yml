@@ -18,7 +18,7 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
   - name: molecule-debian
-    image: debian:12
+    image: debian:11
     dockerfile: Containerfile.j2
     pre_build_image: false
     systemd: true
