@@ -1,0 +1,7 @@
+system_pip_package: python3.11-pip
+python_executable: python3.11
+pip_executable: pip3.11
+receptor_packages:
+  - receptor
+  - receptorctl
+systemd_folder: "/usr/lib/systemd/system"

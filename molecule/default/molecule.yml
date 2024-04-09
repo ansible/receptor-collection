@@ -12,8 +12,8 @@ platforms:
     privileged: true
     command: "/usr/sbin/init"
     tmpfs:
-      - /run
-      - /tmp
+      "/run": "rw,mode=1777"
+      "/tmp": "rw,mode=1777"
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
@@ -25,8 +25,8 @@ platforms:
     privileged: true
     command: "/lib/systemd/systemd"
     tmpfs:
-      - /run
-      - /tmp
+      "/run": "rw,mode=1777"
+      "/tmp": "rw,mode=1777"
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
