@@ -18,6 +18,7 @@
 - name: Install additional python packages
   ansible.builtin.pip:
     name: "{{ additional_python_packages | default([]) }}"
+    state: "{{ 'latest' if 'update' in receptor_install_method else 'present' }}"
     executable: "{{ pip_executable }}"
 
 - name: Symlink receptorctl to /usr/bin
