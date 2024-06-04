@@ -6,11 +6,12 @@ driver:
   name: podman
 platforms:
   - name: molecule-centos
-    image: quay.io/centos/centos:stream8
-    pre_build_image: true
+    image: quay.io/centos/centos:stream9
+    dockerfile: Containerfile_centos.j2
+    pre_build_image: false
     systemd: true
     privileged: true
-    command: "/usr/sbin/init"
+    command: "/lib/systemd/systemd"
     tmpfs:
       "/run": "rw,mode=1777"
       "/tmp": "rw,mode=1777"
