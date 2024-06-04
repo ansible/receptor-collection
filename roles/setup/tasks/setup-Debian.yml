@@ -2,4 +2,4 @@
 - name: Install dependencies specific to the node type
   ansible.builtin.apt:
     name: "{{ additional_system_packages | default([]) }}"
-    state: present
+    state: "{{ 'latest' if 'update' in receptor_install_method else 'present' }}"

@@ -2,7 +2,7 @@
 - name: Install receptor packages
   ansible.builtin.dnf:
     name: "{{ receptor_packages }}"
-    state: present
+    state: "{{ 'latest' if 'update' in receptor_install_method else 'present' }}"
   when:
     - receptor_install_method == 'package'
     - receptor_packages
@@ -37,4 +37,4 @@
 - name: Install dependencies specific to the node type
   ansible.builtin.dnf:
     name: "{{ additional_system_packages | default([]) }}"
-    state: present
+    state: "{{ 'latest' if 'update' in receptor_install_method else 'present' }}"

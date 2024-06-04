@@ -15,7 +15,7 @@
   ansible.builtin.set_fact:
     additional_python_packages: "{{ additional_python_packages + ['receptorctl'] }}"
   when:
-    - receptor_install_method in ['release', 'local']
+    - receptor_install_method in ['release', 'update-release', 'local','update-local']
     - "'receptorctl' not in additional_python_packages"
 
 - name: Install python packages
@@ -24,11 +24,11 @@
 
 - name: Receptor install local
   ansible.builtin.include_tasks: setup-local.yml
-  when: receptor_install_method == 'local'
+  when: receptor_install_method in ['local', 'update-local']
 
 - name: Receptor install release
   ansible.builtin.include_tasks: setup-release.yml
-  when: receptor_install_method == 'release'
+  when: receptor_install_method in ['release', 'update-release']
 
 - name: Check if receptor was installed correctly
   ansible.builtin.command: "receptor --version"
@@ -43,28 +43,31 @@
     fail_msg: "Receptor not installed correctly. Please check the installation or reinstall it with local_receptor: true"
     success_msg: "Receptor installed correctly"
 
-- name: Configure receptor socket
-  ansible.builtin.include_tasks: configure.yml
+- name: Configuration tasks during fisrt installation
+  when: "'update' not in receptor_install_method"
+  block:
+    - name: Configure receptor socket
+      ansible.builtin.include_tasks: configure.yml
 
-- name: TLS files
-  ansible.builtin.include_tasks: tls.yml
-  when: receptor_tls
+    - name: TLS files
+      ansible.builtin.include_tasks: tls.yml
+      when: receptor_tls
 
-- name: Work signing
-  ansible.builtin.include_tasks: worksign.yml
-  when: receptor_sign or receptor_verify
+    - name: Work signing
+      ansible.builtin.include_tasks: worksign.yml
+      when: receptor_sign or receptor_verify
 
-- name: Generate receptor config
-  ansible.builtin.include_tasks: generate_config.yml
+    - name: Generate receptor config
+      ansible.builtin.include_tasks: generate_config.yml
 
 - name: Setup systemd
   ansible.builtin.include_tasks: setup-service.yml
-  when: receptor_install_method in ['release', 'local']
+  when: receptor_install_method in ['release', 'local', 'update-release', 'local','update-local']
 
 - name: Start Receptor service
   ansible.builtin.systemd:
     name: "{{ receptor_service_name }}"
-    state: started
+    state: 'started'
     daemon_reload: true
     enabled: true
   register: _started
