@@ -15,6 +15,7 @@
   when: custom_tls_certfile is defined or custom_tls_keyfile is defined
 
 - name: Set TLS file permissions
+  ignore_errors: "{{ ansible_check_mode }}"
   ansible.builtin.file:
     dest: "{{ item }}"
     owner: "{{ receptor_user }}"
