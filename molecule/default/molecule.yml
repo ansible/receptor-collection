@@ -5,18 +5,6 @@ dependency:
 driver:
   name: podman
 platforms:
-  - name: molecule-centos
-    image: quay.io/centos/centos:stream8
-    pre_build_image: true
-    systemd: true
-    privileged: true
-    command: "/usr/sbin/init"
-    tmpfs:
-      "/run": "rw,mode=1777"
-      "/tmp": "rw,mode=1777"
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-
   - name: molecule-debian
     image: debian:11
     dockerfile: Containerfile.j2
