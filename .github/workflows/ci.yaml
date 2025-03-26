@@ -37,3 +37,45 @@ jobs:
 
       - name: Run ansible-lint
         uses: ansible/ansible-lint@main
+
+  antsibull-docs-lint:
+    name: antsibull-docs-lint
+    runs-on: ubuntu-latest
+    steps:
+      # Important: This sets up your GITHUB_WORKSPACE environment variable
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v3
+
+      - name: Install Dependencies
+        run: |
+          pip install -r ci-pip-requirements.txt
+
+      - name: Run Anstibull Collection Linting
+        run: |
+          antsibull-docs lint-collection-docs --plugin-docs .
+
+  galaxy-importer-check:
+    name: galaxy-importer-check
+    runs-on: ubuntu-latest
+    steps:
+      # Important: This sets up your GITHUB_WORKSPACE environment variable
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v3
+
+      - name: Install Dependencies
+        run: |
+          pip install -r ci-pip-requirements.txt
+
+      - name: Build the Collection with ansible-galaxy
+        run: |
+          ansible-galaxy collection build -v --force
+
+      - name: Run Galaxy Importer
+        run: |
+          python -m galaxy_importer.main ansible-receptor-*.tar.gz
+
+      - name: Echo the output of importer_result.json
+        run: |
+          echo importer_result.json
