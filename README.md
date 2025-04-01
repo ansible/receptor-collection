@@ -1,42 +1,57 @@
-# 1. Ansible Receptor Collection
+# Ansible Receptor Collection (ansible.receptor)
 
-- [1. Ansible Receptor Collection](#1-ansible-receptor-collection)
-- [2. Description](#2-description)
-- [3. Environments Tested](#3-environments-tested)
-- [4. Roles](#4-roles)
-  - [4.1. Podman](#41-podman)
-    - [4.1.1. Variables](#411-variables)
-  - [4.2. Setup](#42-setup)
-    - [4.2.1. Overview](#421-overview)
-    - [4.2.2. Variables](#422-variables)
-- [5. License](#5-license)
-
-# 2. Description
+## Description
 
 This collection prepares and configures a node for running Receptor. The setup role in particular will configure a systemd service to run Receptor. As long as the service is running, the node will remain connected to other Receptor nodes in the mesh. This collection supports defining the peering relationship between nodes.
+
+## Requirements
+
+ansible_core >= 2.15.0
+Python >= 3.9
+
+## Installation
+
+Before using this collection, you need to install it with the Ansible Galaxy command-line tool:
+
+```
+ansible-galaxy collection install ansible.receptor
+```
+
+You can also include it in a requirements.yml file and install it with ansible-galaxy collection install -r requirements.yml, using the format:
+
+
+```yaml
+collections:
+  - name: ansible.receptor
+```
+
+Note that if you install any collections from Ansible Galaxy, they will not be upgraded automatically when you upgrade the Ansible package.
+To upgrade the collection to the latest available version, run the following command:
+
+```
+ansible-galaxy collection install ansible.receptor --upgrade
+```
+
+You can also install a specific version of the collection, for example, if you need to downgrade when something is broken in the latest version (please report an issue in this repository). Use the following syntax to install version 1.0.0:
+
+```
+ansible-galaxy collection install ansible.receptor:==1.0.0
+```
+
+See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guide/collections_using.html) for more details.
+
+## Use Cases
 
 This collection contains two roles:
 
 - __podman__ : installs and configures podman on the node
 - __setup__: installs and configures Receptor on the node
 
-# 3. Environments Tested
-
-This collection has been tested on the following distributions:
-
-| OS | Release | Tested (Y/N)  |
-| ---------- | ------- | ---------- |
-| Centos | >=8 | Y |
-| Redhat | >=8 | Y |
-| Debian | >=11 | Y |
-
-# 4. Roles
-
-## 4.1. Podman
+### Podman Role
 
 Installs and configures podman.
 
-### 4.1.1. Variables
+#### Variables
 
 | Parameter | Type | Defaults | Comments |
 | ---------- | ------- | ---------- | -------- |
@@ -45,13 +60,10 @@ Installs and configures podman.
 | __default_runtime__  | string | `crun` | The default container runtime to use for podman. |
 | __default_cgroup_manager__  | string | `cgroupfs` | The default cgroup manager to use for podman. |
 
-## 4.2. Setup
 
-Installs and configures a Receptor node.
+### Setup Role
 
-### 4.2.1 Overview
-
-The setup role will do the following,
+Installs and configures a Receptor node by doing the following:
 
 - Install Receptor
   - By default, Receptor is obtained via the pre-built binary on the Receptor Github release page.
@@ -64,7 +76,7 @@ The setup role will do the following,
 
 See `receptor_install_method` for options on how Receptor is installed.
 
-### 4.2.2. Variables
+#### Variables
 
 | Parameter                             | Type         | Defaults                                                    | Comments                                                                                                                                                                                                                                                                                                                      |
 |---------------------------------------|--------------|-------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -116,8 +128,32 @@ See `receptor_install_method` for options on how Receptor is installed.
 | __receptor_github_release__           | string       | `''`                                                        | Receptor version to download Receptor from, if install method is 'release'. If not specified, the latest release will be used.                                                                                                                                                                                                |
 | __receptor_service_name__             | string       | `receptor`                                                  | Name of systemd service that runs Receptor. Used only when `receptor_install_method` is 'local' or 'release'. If Receptor is installed via a package manager, a systemd is already configured.                                                                                                                                |
 | __receptor_fd_limit_soft__            | integer      | `4096`                                                      | The file descriptor limits in PAM for Receptor.                                                                                                                                                                                                                                                                               |
-| __receptor_fd_limit_soft__            | integer      | `8192`                                                      | The file descriptor limits in PAM for Receptor.                                                                                                                                                                                                                                                                               |
+| __receptor_fd_limit_soft__            | integer      | `8192`                                                      | The file descriptor limits in PAM for Receptor.  
 
-# 5. License
+## Testing
 
-Apache 2
+This collection has been tested on the following distributions:
+
+| OS | Release | Tested (Y/N)  |
+| ---------- | ------- | ---------- |
+| Centos | >=8 | Y |
+| Redhat | >=8 | Y |
+| Debian | >=11 | Y |
+
+## Support
+
+### Reporting Issue
+
+We value any and every kind of feedback.
+
+To report an issue, please open an issue against this GitHub project.
+
+If you also want to provide a PR to fix the issue please do it. We encourage (and welcome contributions).
+
+## Release Notes and Roadmap
+
+[Release Notes](CHANGELOG.rst)
+
+## License Information
+
+[Apache 2](https://www.apache.org/licenses/LICENSE-2.0)

@@ -5,6 +5,7 @@
 # option will be parsed relative to the CWD of execution.
 exclude_paths:
   - changelogs/
+  - .pre-commit-config.yaml
 
 # Ansible-lint is able to recognize and load skip rules stored inside
 # `.ansible-lint-ignore` (or `.config/ansible-lint-ignore.txt`) files.

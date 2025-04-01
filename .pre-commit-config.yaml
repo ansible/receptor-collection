@@ -1,0 +1,41 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.17.2
+    hooks:
+      - id: markdownlint-cli2
+  - repo: https://github.com/ansible/ansible-lint.git
+    rev: v25.1.3
+    hooks:
+      - id: ansible-lint
+        pass_filenames: false
+        always_run: true
+        entry: ansible-lint
+        args:
+          - --profile=production
+  - repo: local
+    hooks:
+      - id: antsibull-docs
+        name: Antsibull Docs Linting
+        entry: sh
+        args:
+          - -c
+          - 'pip install -r ci-pip-requirements.txt && antsibull-docs lint-collection-docs --plugin-docs .'
+        language: system
+        pass_filenames: false
+  - repo: local
+    hooks:
+      - id: importer-checks
+        name: Galaxy Importer Check
+        entry: sh
+        args:
+          - -c
+          - 'pip install -r ci-pip-requirements.txt && ansible-galaxy collection build -v --force && python -m galaxy_importer.main ansible-receptor-*.tar.gz && rm ansible-receptor-*.tar.gz && rm importer_result.json'
+        language: system
+        pass_filenames: false
+...

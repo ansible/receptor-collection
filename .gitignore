@@ -1,2 +1,5 @@
 *~
 .idea
+.ansible
+importer_result.json
+*.tar.gz

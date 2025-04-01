@@ -1,0 +1,23 @@
+---
+galaxy_info:
+  role_name: setup
+  namespace: ansible
+  author: Red Hat
+  description: Installs and configures receptor nodes.
+  company: Red Hat, Inc.
+
+  license: Apache License 2.0
+
+  min_ansible_version: "2.15"
+
+  platforms:
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+
+  galaxy_tags:
+    - receptor
+    - podman
+    - redhat
+    - rhel
