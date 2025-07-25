@@ -5,7 +5,7 @@
     state: present
   when:
     - receptor_install_method == 'package'
-    - receptor_packages
+    - receptor_packages | length > 0
   notify:
     - Restart Receptor
 
