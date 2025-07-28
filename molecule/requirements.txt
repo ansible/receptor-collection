@@ -1,3 +1,4 @@
 molecule
-ansible-core
+# ansible-core 2.19 breaks molecule plugins for now
+ansible-core==2.18.7
 molecule-plugins[podman]
