@@ -3,8 +3,8 @@
   ansible.builtin.assert:
     quiet: true
     that:
-      - custom_tls_certfile | default('') | length
-      - custom_tls_keyfile | default('') | length
+      - custom_tls_certfile | default('') | length > 0
+      - custom_tls_keyfile | default('') | length > 0
     fail_msg: >
       "You must provide both 'custom_tls_certfile' and 'custom_tls_keyfile'."
 
@@ -12,7 +12,7 @@
   ansible.builtin.assert:
     quiet: true
     that:
-      - custom_ca_certfile | default('') | length
+      - custom_ca_certfile | default('') | length > 0
     fail_msg: >
       "You must provide the public CA file when providing custom TLS certificates."
 
