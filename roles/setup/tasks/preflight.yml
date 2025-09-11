@@ -1,5 +1,5 @@
 ---
 - name: Check local binary file is set
   ansible.builtin.assert:
-    that: receptor_local_bin_file | length
+    that: receptor_local_bin_file | length > 0
   when: receptor_install_method == 'local'
