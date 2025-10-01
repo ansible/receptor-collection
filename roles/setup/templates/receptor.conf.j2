@@ -2,13 +2,13 @@
 - node:
     id: {{ receptor_host_identifier }}
 
-{% if receptor_sign %}
+{% if receptor_sign | bool %}
 - work-signing:
     privatekey: {{ receptor_worksign_private_keyfile }}
     tokenexpiration: 1m
 {% endif %}
 
-{% if receptor_verify %}
+{% if receptor_verify | bool %}
 - work-verification:
     publickey: {{ receptor_worksign_public_keyfile }}
 {% endif %}
@@ -19,11 +19,11 @@
     service: control
     filename: {{ receptor_socket_dir }}/{{ receptor_control_filename }}
     permissions: 0660
-    {% if receptor_tls -%}
+    {% if receptor_tls | bool -%}
     tls: tls_server
     {%- endif %}
 
-{% if receptor_tls -%}
+{% if receptor_tls | bool -%}
 - tls-server:
     name: tls_server
     cert: {{ receptor_tls_certfile }}
@@ -41,12 +41,12 @@
     mintls13: {{ receptor_mintls13 | bool }}
 {%- endif %}
 
-{% if receptor_local_only %}
+{% if receptor_local_only | bool %}
 - local-only
-{% elif receptor_listener %}
+{% elif receptor_listener | bool %}
 - {{ receptor_protocol }}-listener:
     port: {{ receptor_port }}
-    {% if receptor_tls -%}
+    {% if receptor_tls | bool -%}
     tls: tls_server
     {%- endif %}
 {% endif %}
@@ -60,7 +60,7 @@
     address: {{ peer['address'] }}
 {% endif %}
     redial: true
-{% if receptor_tls %}
+{% if receptor_tls | bool %}
     tls: tls_client
 {% endif %}
 {% endfor %}

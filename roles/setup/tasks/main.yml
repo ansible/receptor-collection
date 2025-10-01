@@ -48,11 +48,11 @@
 
 - name: TLS files
   ansible.builtin.include_tasks: tls.yml
-  when: receptor_tls
+  when: receptor_tls | bool
 
 - name: Work signing
   ansible.builtin.include_tasks: worksign.yml
-  when: receptor_sign or receptor_verify
+  when: receptor_sign | bool or receptor_verify | bool
 
 - name: Generate receptor config
   ansible.builtin.include_tasks: generate_config.yml

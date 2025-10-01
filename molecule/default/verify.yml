@@ -1,0 +1,20 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Retrieve configuration
+      ansible.builtin.command: cat /etc/receptor/receptor.conf
+      register: config_content
+      changed_when: false
+
+    - name: Assert non-boolean values are handled correctly
+      ansible.builtin.assert:
+        that:
+          - "'work-signing:' not in config_content.stdout"
+          - "'work-verification:' not in config_content.stdout"
+          - "'tls-server:' not in config_content.stdout"
+          - "'tcp-listener:' not in config_content.stdout"
+          - "'local-only' not in config_content.stdout"
+        fail_msg: "False boolean values not handled correctly in configuration"
+        success_msg: "False boolean values handled correctly in configuration"

@@ -6,7 +6,7 @@
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
     mode: '0640'
-  when: receptor_sign
+  when: receptor_sign | bool
   notify:
     - Restart Receptor
 
@@ -17,6 +17,6 @@
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
     mode: '0640'
-  when: receptor_verify
+  when: receptor_verify | bool
   notify:
     - Restart Receptor
