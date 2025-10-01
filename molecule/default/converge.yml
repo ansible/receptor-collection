@@ -2,6 +2,15 @@
 - name: Create
   hosts: all
   gather_facts: true
+  vars:
+    # Use non-boolean values to ensure compatibility with Ansible-core >= 2.19
+    receptor_tls: FOO
+    receptor_sign: FOO
+    receptor_verify: FOO
+    receptor_local_only: FOO
+    receptor_listener: FOO
+    receptor_mintls13: FOO
+    receptor_replace_tls: FOO
   tasks:
     - name: Create the receptor user
       ansible.builtin.user:

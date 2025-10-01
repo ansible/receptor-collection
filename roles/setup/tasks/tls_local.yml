@@ -52,7 +52,7 @@
     owner: "{{ receptor_user }}"
     group: "{{ receptor_group }}"
     mode: '0640'
-    force: "{{ receptor_replace_tls }}"
+    force: "{{ receptor_replace_tls | bool }}"
   with_items:
     - { src: '{{ custom_tls_certfile }}', dest: '{{ receptor_tls_certfile }}' }
     - { src: '{{ custom_tls_keyfile }}', dest: '{{ receptor_tls_keyfile }}' }
