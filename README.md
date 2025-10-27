@@ -1,5 +1,11 @@
 # Ansible Receptor Collection (ansible.receptor)
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ansible_receptor-collection&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ansible_receptor-collection)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ansible_receptor-collection&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=ansible_receptor-collection)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ansible_receptor-collection&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=ansible_receptor-collection)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ansible_receptor-collection&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ansible_receptor-collection)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ansible_receptor-collection&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ansible_receptor-collection)
+
 ## Description
 
 This collection prepares and configures a node for running Receptor. The setup role in particular will configure a systemd service to run Receptor. As long as the service is running, the node will remain connected to other Receptor nodes in the mesh. This collection supports defining the peering relationship between nodes.
@@ -139,6 +145,23 @@ This collection has been tested on the following distributions:
 | Centos | >=8 | Y |
 | Redhat | >=8 | Y |
 | Debian | >=11 | Y |
+
+### Code Quality
+
+This project uses [SonarCloud](https://sonarcloud.io/summary/new_code?id=ansible_receptor-collection) for continuous code quality analysis.
+
+- **Quality Analysis**: All pull requests are automatically analyzed for code quality
+- **Quality Gate**: New code must meet quality standards including maintainability, reliability, and security
+- **Dynamic Analysis**: SonarCloud performs continuous code quality checks on all contributions
+
+**Note**: This is an Ansible collection with YAML-based roles. Testing is performed using Molecule.
+
+To run tests locally:
+
+```bash
+pip install -r molecule/requirements.txt
+molecule test
+```
 
 ## Support
 
