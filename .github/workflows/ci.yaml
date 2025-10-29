@@ -5,6 +5,8 @@ name: CI
 'on':
   pull_request:
   push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -35,8 +37,32 @@ jobs:
       # Important: This sets up your GITHUB_WORKSPACE environment variable
       - uses: actions/checkout@v4
 
+      - name: Install ansible-lint
+        run: |
+          pip install ansible-lint
+
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@main
+        run: |
+          ansible-lint -f sarif ./ > ansible-lint-report.txt
+
+      - name: Upload ansible-lint report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ansible-lint-report
+          path: ansible-lint-report.txt
+
+      - name: Create PR number artifact
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "PR_NUMBER: ${{ github.event.number }}" > pr_number.txt
+          cat pr_number.txt
+
+      - name: Upload PR number artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr_number
+          path: pr_number.txt
 
   antsibull-docs-lint:
     name: antsibull-docs-lint

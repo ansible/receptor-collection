@@ -1,54 +1,79 @@
 ---
-name: SonarCloud Analysis
 
-"on":
-  push:
-    branches:
-      - main
-  pull_request:
+name: SonarCube Static Scans
+
+'on':
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
   workflow_dispatch:
 
 permissions: read-all
-
 jobs:
   sonarcloud:
-    name: SonarCloud Analysis
+    name: SonarCube Static Scans
     runs-on: ubuntu-latest
+
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request'
+
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better analysis
+          fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Fetch Ansible Lint Report
+        uses: actions/download-artifact@v6
         with:
-          python-version: '3.x'
+          name: ansible-lint-report
+          path: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Install ansible-lint
+      - name: Fetch PR Number
+        uses: actions/download-artifact@v6
+        with:
+          name: pr_number
+          path: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Extract PR Number
         run: |
-          pip install ansible-lint
+          cat pr_number.txt
+          echo $(head -n1 pr_number.txt | awk '{print $2}')
+          echo "PR_NUMBER=$(head -n1 pr_number.txt | awk '{print $2}')" >> $GITHUB_ENV
 
-      - name: Run ansible-lint
-        run: |
-          mkdir -p reports
-          ansible-lint -f sarif roles/ > reports/ansible-lint.sarif
-        continue-on-error: true
-
-      - name: SonarCloud Scan (on push to main)
-        uses: SonarSource/sonarqube-scan-action@v6
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Get Additional PR Information
+        uses: octokit/request-action@v2.x
+        id: pr_info
+        with:
+          route: GET /repos/{repo}/pulls/{number}
+          repo: ${{ github.event.repository.full_name }}
+          number: ${{ env.PR_NUMBER }}
         env:
-          SONAR_TOKEN: ${{ secrets[format('{0}', vars.SONAR_TOKEN_SECRET_NAME)] }}
-
-      - name: SonarCloud Scan (on PR)
-        uses: SonarSource/sonarqube-scan-action@v6
-        if: github.event_name == 'pull_request'
-        env:
-          SONAR_TOKEN: ${{ secrets[format('{0}', vars.SONAR_TOKEN_SECRET_NAME)] }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set Additional PR Information
+        run: |
+          echo "PR_BASE=${{ fromJson(steps.pr_info.outputs.data).base.ref }}" >> $GITHUB_ENV
+          echo "PR_HEAD=${{ fromJson(steps.pr_info.outputs.data).head.ref }}" >> $GITHUB_ENV
+
+      - name: Checkout Code for PR
+        run: |
+          gh pr checkout ${{ env.PR_NUMBER }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: SonarCube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets[format('{0}', vars.SONAR_TOKEN_SECRET_NAME)] }}
         with:
           args: >
-            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
-            -Dsonar.pullrequest.branch=${{ github.head_ref }}
-            -Dsonar.pullrequest.base=${{ github.base_ref }}
+            -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }}
+            -Dsonar.pullrequest.key=${{ env.PR_NUMBER }}
+            -Dsonar.pullrequest.branch=${{ env.PR_HEAD }}
+            -Dsonar.pullrequest.base=${{ env.PR_BASE }}
