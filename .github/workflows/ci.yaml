@@ -46,7 +46,7 @@ jobs:
           ansible-lint -f sarif ./ > ansible-lint-report.txt
 
       - name: Upload ansible-lint report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ansible-lint-report
           path: ansible-lint-report.txt
@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload PR number artifact
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: pr_number
           path: pr_number.txt
