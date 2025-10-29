@@ -3,3 +3,14 @@
 .ansible
 importer_result.json
 *.tar.gz
+
+# Coverage reports
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+*.pyc
+__pycache__/
+
+# SonarCloud
+.scannerwork/
