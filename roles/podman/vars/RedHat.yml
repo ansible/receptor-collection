@@ -1,3 +1,5 @@
 __podman_packages:
   - podman
   - crun
+  - fuse-overlayfs
+  - slirp4netns
