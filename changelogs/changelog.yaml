@@ -6,15 +6,84 @@ releases:
       - roles/setup - As well as preferring 'true' to 'yes', and marking commands
         that don't change anything as always unchanged.
       major_changes:
-      - prepare for release - updated some formatting as well as including changelogs
+      - Prepare for release - updated some formatting as well as including changelogs
         + EE.yml file for certification
       minor_changes:
-      - don't install receptorctl - upstream users will install via pip instead
-      - update galaxy.yml - added tags and added runtime file for ansible version
+      - Don't install receptorctl - upstream users will install via pip instead
+      - Update galaxy.yml - added tags and added runtime file for ansible version
         support
     fragments:
     - 10-add-additonal-metadata.yml
     - 4-do-not-install-receptorctl-package.yml
     - 7-use-the-fully-qualified-collection-name-for-the-ansible-builtins.yml
     - 8-publish-receptor-collection-to-ansible-galaxy-as-a-certified-collection.yml
-    release_date: '2022-09-29'
+    release_date: '2022-10-04'
+  1.1.0:
+    changes:
+      minor_changes:
+      - Include a role for setting up podman
+    release_date: '2022-10-12'
+  1.1.1:
+    changes:
+      bugfixes:
+      - Fix correct indentation and line breaks for receptor_peers
+      minor_changes:
+      - Removed dependencies section from execution-environment.yml
+    release_date: '2023-04-19'
+  2.0.0:
+    changes:
+      breaking_changes:
+      - Use release install method by default instead of package
+      bugfixes:
+      - Fix incorrect default value for receptor_install_method in documentation
+      major_changes:
+      - Add debian to setup and podman roles
+      - Add handlers to restart or reload receptor
+      - Breakout config creation into role
+      minor_changes:
+      - Add readme files to roles
+      - Add receptor_service_name to setup-service.yml
+      - Check python version
+    release_date: '2023-08-29'
+  2.0.1:
+    changes:
+      bugfixes:
+      - Fix rendering of README table
+    release_date: '2023-08-31'
+  2.0.2:
+    changes:
+      minor_changes:
+      - Add molecule testing
+      - Do not run python packages related tasks if no additional_python_packages
+    release_date: '2023-10-30'
+  2.0.3:
+    changes:
+      minor_changes:
+      - Add receptor_user/receptor_group variables
+      - Support old-style host plus port as well as new-style address strings
+    release_date: '2024-01-23'
+  2.0.4:
+    changes:
+      minor_changes:
+      - Bump python and pip version to 3.11
+      - Fix for check mode failure when no TLS files exist
+    release_date: '2025-02-14'
+  2.0.5:
+    changes:
+      minor_changes:
+      - Updates for certified collection validation
+    release_date: '2025-04-08'
+  2.0.6:
+    changes:
+      bugfixes:
+      - Fix the when condition on Install receptor packages task
+      minor_changes:
+      - Update collection to support ansible-core 2.19
+    release_date: '2025-10-28'
+  2.0.7:
+    changes:
+      bugfixes:
+      - Update CHANGELOG.rst
+      minor_changes:
+      - Install more podman dependent packages to adopt RHEL 10
+    release_date: '2025-11-12'
