@@ -163,15 +163,17 @@ pip install -r molecule/requirements.txt
 molecule test
 ```
 
+## Contributing
+
+We value all feedback.
+To report an issue or propose an enhancement, please open an issue in our [GitHub project](https://github.com/ansible/receptor-collection).
+
+We also encourage and welcome contributions!
+To fix an issue or make code changes, please create a fork and submit a pull request PR. 
+
 ## Support
 
-### Reporting Issue
-
-We value any and every kind of feedback.
-
-To report an issue, please open an issue against this GitHub project.
-
-If you also want to provide a PR to fix the issue please do it. We encourage (and welcome contributions).
+As Red Hat Ansible Certified Content, this collection is entitled to support through the Ansible Automation Platform (AAP) using the **Create issue** button on the top right corner. If a support case cannot be opened with Red Hat and the collection has been obtained either from Galaxy or GitHub, there may community help available on the [Ansible Forum](https://forum.ansible.com/).
 
 ## Release Notes and Roadmap
 
