@@ -177,7 +177,7 @@ As Red Hat Ansible Certified Content, this collection is entitled to support thr
 
 ## Release Notes and Roadmap
 
-[Release Notes](CHANGELOG.rst)
+[Release Notes](https://github.com/ansible/receptor-collection/blob/main/CHANGELOG.rst)
 
 ## License Information
 
