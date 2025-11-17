@@ -30,6 +30,25 @@ jobs:
         run: |
           molecule test
 
+  markdown-lint:
+    name: markdown-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+
+      - name: Install pre-commit
+        run: |
+          pip install pre-commit
+
+      - name: Run pre-commit hooks
+        run: |
+          pre-commit run end-of-file-fixer --all-files
+          pre-commit run trailing-whitespace --all-files
+          pre-commit run markdownlint --all-files
+
+
   ansible-lint:
     name: ansible-lint
     runs-on: ubuntu-latest
@@ -37,9 +56,11 @@ jobs:
       # Important: This sets up your GITHUB_WORKSPACE environment variable
       - uses: actions/checkout@v5
 
-      - name: Install ansible-lint
+      - uses: actions/setup-python@v6
+
+      - name: Install Dependencies
         run: |
-          pip install ansible-lint
+          pip install -r ci-pip-requirements.txt
 
       - name: Run ansible-lint
         run: |

@@ -1,3 +1,4 @@
-pre-commit
-galaxy-importer
-antsibull-docs
+ansible-lint==25.8.2
+pre-commit==4.4.0
+galaxy-importer==0.4.34
+antsibull-docs==2.22.1
