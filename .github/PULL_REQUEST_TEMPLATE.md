@@ -36,9 +36,10 @@
 <!-- List any specific setup required -->
 
 ### Steps to Test
-1. 
-2. 
-3. 
+
+1.
+2.
+3.
 
 ### Expected Results
 <!-- Describe what should happen after following the steps -->
