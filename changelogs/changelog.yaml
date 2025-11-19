@@ -82,8 +82,11 @@ releases:
     release_date: '2025-10-28'
   2.0.7:
     changes:
-      bugfixes:
-      - Update CHANGELOG.rst
       minor_changes:
       - Install more podman dependent packages to adopt RHEL 10
     release_date: '2025-11-12'
+  2.0.8:
+    changes:
+      bugfixes:
+      - Update CHANGELOG.rst
+    release_date: '2025-11-19'
