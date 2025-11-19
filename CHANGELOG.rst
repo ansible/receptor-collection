@@ -4,6 +4,14 @@ Ansible.Receptor Release Notes
 
 .. contents:: Topics
 
+v2.0.8
+======
+
+Bugfixes
+--------
+
+- Update CHANGELOG.rst
+
 v2.0.7
 ======
 
@@ -11,11 +19,6 @@ Minor Changes
 -------------
 
 - Install more podman dependent packages to adopt RHEL 10
-
-Bugfixes
---------
-
-- Update CHANGELOG.rst
 
 v2.0.6
 ======
