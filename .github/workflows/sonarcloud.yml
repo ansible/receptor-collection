@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch Ansible Lint Report
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: ansible-lint-report
           path: .
@@ -33,7 +33,7 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Fetch PR Number
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: pr_number
           path: .
