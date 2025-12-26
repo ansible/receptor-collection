@@ -1,0 +1,5 @@
+---
+receptor_packages:
+  - receptor
+  - python3-receptorctl
+systemd_folder: "/usr/lib/systemd/system"
