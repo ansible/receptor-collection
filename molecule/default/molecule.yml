@@ -6,7 +6,7 @@ driver:
   name: podman
 platforms:
   - name: molecule-debian
-    image: debian:11
+    image: debian:12
     dockerfile: Containerfile.j2
     pre_build_image: false
     systemd: true
