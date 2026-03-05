@@ -19,7 +19,7 @@
   ansible.builtin.pip:
     name: "{{ additional_python_packages | default([]) }}"
     executable: "{{ pip_executable }}"
-    extra_args: "--break-system-packages"
+    extra_args: "{{ '--break-system-packages' if ansible_os_family == 'Debian' else omit }}"
 
 - name: Symlink receptorctl to /usr/bin
   ansible.builtin.file:
