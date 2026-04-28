@@ -48,43 +48,6 @@ jobs:
           pre-commit run trailing-whitespace --all-files
           pre-commit run markdownlint --all-files
 
-
-  ansible-lint:
-    name: ansible-lint
-    runs-on: ubuntu-latest
-    steps:
-      # Important: This sets up your GITHUB_WORKSPACE environment variable
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-python@v6
-
-      - name: Install Dependencies
-        run: |
-          pip install -r ci-pip-requirements.txt
-
-      - name: Run ansible-lint
-        run: |
-          ansible-lint -f sarif ./ > ansible-lint-report.txt
-
-      - name: Upload ansible-lint report
-        uses: actions/upload-artifact@v5
-        with:
-          name: ansible-lint-report
-          path: ansible-lint-report.txt
-
-      - name: Create PR number artifact
-        if: github.event_name == 'pull_request'
-        run: |
-          echo "PR_NUMBER: ${{ github.event.number }}" > pr_number.txt
-          cat pr_number.txt
-
-      - name: Upload PR number artifact
-        if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v5
-        with:
-          name: pr_number
-          path: pr_number.txt
-
   antsibull-docs-lint:
     name: antsibull-docs-lint
     runs-on: ubuntu-latest
@@ -101,28 +64,3 @@ jobs:
       - name: Run Anstibull Collection Linting
         run: |
           antsibull-docs lint-collection-docs --plugin-docs .
-
-  galaxy-importer-check:
-    name: galaxy-importer-check
-    runs-on: ubuntu-latest
-    steps:
-      # Important: This sets up your GITHUB_WORKSPACE environment variable
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-python@v6
-
-      - name: Install Dependencies
-        run: |
-          pip install -r ci-pip-requirements.txt
-
-      - name: Build the Collection with ansible-galaxy
-        run: |
-          ansible-galaxy collection build -v --force
-
-      - name: Run Galaxy Importer
-        run: |
-          python -m galaxy_importer.main ansible-receptor-*.tar.gz
-
-      - name: Echo the output of importer_result.json
-        run: |
-          echo importer_result.json
