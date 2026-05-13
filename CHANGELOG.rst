@@ -4,6 +4,16 @@ Ansible.Receptor Release Notes
 
 .. contents:: Topics
 
+v2.0.9
+======
+
+Minor Changes
+-------------
+
+- Integrate official partner-certification-checker
+- pip break_system_packages method and Ubuntu 24.04 support
+- Support for Debian 12
+
 v2.0.8
 ======
 
