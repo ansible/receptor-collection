@@ -90,3 +90,10 @@ releases:
       bugfixes:
       - Update CHANGELOG.rst
     release_date: '2025-11-19'
+  2.0.9:
+    changes:
+      minor_changes:
+      - Integrate official partner-certification-checker
+      - pip break_system_packages method and Ubuntu 24.04 support
+      - Support for Debian 12
+    release_date: '2026-05-13'
