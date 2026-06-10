@@ -1,13 +1,13 @@
 name: Refresh the automation hub token
-# the token expires every 30 days, so we need to refresh it
+# the offline token expires after 30 days of inactivity, refresh weekly for safety
 "on":
   schedule:
-    - cron: '0 12 1,15 * *' # run 12pm on the 1st and 15th of the month
+    - cron: '23 11 * * 1' # every Monday at 11:23 UTC
   workflow_dispatch:
 
 jobs:
   refresh:
-    uses: ansible/devtools/.github/workflows/ah_token_refresh.yml@main
+    uses: ansible/team-devtools/.github/workflows/ah_token_refresh.yml@main
     with:
       environment: release
     secrets:
