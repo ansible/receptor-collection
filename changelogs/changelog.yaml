@@ -97,3 +97,8 @@ releases:
       - pip break_system_packages method and Ubuntu 24.04 support
       - Support for Debian 12
     release_date: '2026-05-13'
+  2.0.10:
+    changes:
+      bugfixes:
+      - Fix Debian vars to allow setting receptor_install_method to ``local``
+    release_date: '2026-06-10'

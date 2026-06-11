@@ -4,6 +4,14 @@ Ansible.Receptor Release Notes
 
 .. contents:: Topics
 
+v2.0.10
+=======
+
+Bugfixes
+--------
+
+- Fix Debian vars to allow setting receptor_install_method to ``local``
+
 v2.0.9
 ======
 
@@ -11,8 +19,8 @@ Minor Changes
 -------------
 
 - Integrate official partner-certification-checker
-- pip break_system_packages method and Ubuntu 24.04 support
 - Support for Debian 12
+- pip break_system_packages method and Ubuntu 24.04 support
 
 v2.0.8
 ======
