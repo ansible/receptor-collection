@@ -12,3 +12,5 @@ tags:
   - infrastructure
   - receptor
 repository: https://github.com/ansible/receptor-collection
+build_ignore:
+  - .ansible-lint

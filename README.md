@@ -15,8 +15,8 @@ This collection supports defining the peering relationship between nodes.
 
 ## Requirements
 
-ansible_core >= 2.15.0
-Python >= 3.9
+ansible_core >= 2.16.0
+Python >= 3.12
 
 ## Installation
 
